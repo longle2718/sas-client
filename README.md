@@ -1,7 +1,7 @@
 IlliadAccess
 ============
 
-Access code to Illiad (Illinois acoustic database) at acoustic.ifp.uiuc.edu
+Access code to Illiad (Illinois acoustic database) at http://acoustic.ifp.uiuc.edu
 
 ## Dependencies
 
