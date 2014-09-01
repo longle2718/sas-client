@@ -3,7 +3,7 @@ IlliadAccess
 
 Driver code to access Illiad (Illinois acoustic database) service at http://acoustic.ifp.uiuc.edu
 
-[![ScreenShot](https://raw.githubusercontent.com/Amplifon/Sounds-of-Street-View-Framework/master/src/img/vimeo-img.jpg)](http://www.youtube.com/embed/LasqZwXG37g)
+[![ScreenShot](http://img.youtube.com/vi/LasqZwXG37g/0.jpg)](http://www.youtube.com/watch?v=LasqZwXG37g)
 
 ## Dependencies
 
