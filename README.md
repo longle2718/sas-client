@@ -10,5 +10,5 @@ Javascript version is given in js/
 Matlab version is given in matlab/
 
 ## Ptolemy II
-Ptolemy version is given in ptolemy/. Note that the ptolemy version depends on the matlab version
+Ptolemy version is given in ptolemy/. Note that the Ptolemy version depends on subroutines in matlab/
 
