@@ -9,9 +9,10 @@ clear all; close all
 
 addpath(genpath('.'));
 % Import cert into Matlab jvm truststore.
+% Default alias is mykey
 % Need write access to the truststore (cacerts)
 % Only need to do this once.
-%importcert('mongoser.crt')
+%importcert('illiad.crt')
 
 % Query file list from the database, limited to max 24 files
 q.t1 = datenum(2014,8,19,12,20,0); q.limit = 24;
