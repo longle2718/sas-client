@@ -33,7 +33,8 @@ while(1)
         pause(period);
         
         % periodic query
-        file = IllTimeQuery(db, user, pwd, lastTime+1/864000, now);
+        q.t1 = lastTime+1/864000; q.t2 = now;
+        file = IllQuery(db, user, pwd, q);
         if (~iscell(file))
             continue;
         end

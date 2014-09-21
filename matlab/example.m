@@ -14,10 +14,10 @@ addpath(genpath('.'));
 %importcert('mongoser.crt')
 
 % Query file list from the database, limited to max 24 files
-% IllTimeQuery assumes Central Time.
-file = IllTimeQuery('YourDB', 'YourID', 'YourPwd', datenum(2014,8,19,12,20,0), '24');
+q.t1 = datenum(2014,8,19,12,20,0); q.limit = 24;
+events = IllQuery('YourDB', 'YourID', 'YourPwd', q);
 % Download first available raw data
-[data, y, header] = IllDownData('YourDB', 'YourID', 'YourPwd', file{1}.filename);
+[data, y, header] = IllDownData('YourDB', 'YourID', 'YourPwd', events{1}.filename);
 % Play the sound
 soundsc(y, double(header.sampleRate))
 % Send to google voice api for speech recognition, quota 50 requests/day
@@ -27,6 +27,6 @@ soundsc(y, double(header.sampleRate))
 
 
 % Download event descriptor
-event = IllDownEvent('YourDB', 'YourID', 'YourPwd', file{1}.filename);
+event = IllDownEvent('YourDB', 'YourID', 'YourPwd', events{1}.filename);
 % Display the first event
 event{1}
