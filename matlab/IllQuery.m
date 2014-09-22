@@ -54,7 +54,7 @@ else
 end
 
 if isfield(q, 'kw')
-    kwDat = [',{transcript:' q.kw '}'];
+    kwDat = [',{transcript: "' q.kw '"}'];
 else
     kwDat = '';
 end
