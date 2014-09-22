@@ -39,7 +39,7 @@ elseif isfield(q, 't1')
 end
 
 if isfield(q, 'f1') && isfield(q, 'f2')
-    freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}}' ',' '{maxFreq:{$lte:' num2str(q.f2) '}}'];
+    freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
 elseif isfield(q, 'f1')
     freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}}'];
 else
@@ -53,7 +53,13 @@ else
     locDat = '';
 end
 
-postDat = ['{$and:[' timeDat freqDat locDat ']}'];
+if isfield(q, 'kw')
+    kwDat = [',{transcript:' q.kw '}'];
+else
+    kwDat = '';
+end
+
+postDat = ['{$and:[' timeDat freqDat locDat kwDat ']}'];
 
 tmp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);
