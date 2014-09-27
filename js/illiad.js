@@ -87,7 +87,7 @@ var IllUpdateEvent = function(db, user, pwd, filename, op, field){
             withCredentials: true
         }
     }).done(function(data){
-        console.log('IllUpdateField ' + data);
+        console.log('IllUpdateEvent ' + data);
     }).fail(function(){
         console.log('ajax fail');
     });
