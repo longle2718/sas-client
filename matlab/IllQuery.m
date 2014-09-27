@@ -17,7 +17,7 @@
 function file = IllQuery(db, user, pwd, q)
 
 % Adjust time zone from Central Time (US) to UTC
-%tZoneOffset = 5/24;
+tZoneOffset = 5/24;
 
 % Construct the query string
 params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
@@ -27,14 +27,12 @@ end
 queryString = http_paramsToString(params);
 
 % Construct the query data to send
-postDat = '';
-
 if isfield(q, 't1') && isfield(q,'t2')
-    %q.t1 = q.t1 + tZoneOffset;
-    %q.t2 = q.t2 + tZoneOffset;
+    q.t1 = q.t1 + tZoneOffset;
+    q.t2 = q.t2 + tZoneOffset;
     timeDat = ['{recordDate:{$gte:{$date:"' datestr8601(q.t1, '*ymdHMS3') 'Z"}, $lte:{$date:"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 elseif isfield(q, 't1')
-    %q.t1 = q.t1 + tZoneOffset;
+    q.t1 = q.t1 + tZoneOffset;
     timeDat = ['{recordDate:{$gte:{$date:"' datestr8601(q.t1, '*ymdHMS3') 'Z"}}}'];
 end
 

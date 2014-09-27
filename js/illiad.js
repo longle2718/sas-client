@@ -75,7 +75,7 @@ var IllDownEvent = function(db, user, pwd, filename, cb){
 };
 
 var IllQuery = function (db, user, pwd, q, cb){
-    //var tZoneOffset = 5/24;
+    var tZoneOffset = 5/24;
     
     // Construct the query string
     var params = {'dbname':db, 'colname': 'event', 'user': user, 'passwd': pwd};
@@ -86,9 +86,12 @@ var IllQuery = function (db, user, pwd, q, cb){
     
     // Construct the query data to send
     if (q.hasOwnProperty('t1') && q.hasOwnProperty('t2')){
+		q.t1 = q.t1 + tZoneOffset;
+		q.t2 = q.t2 + tZoneOffset;
         timeDat = '{recordDate:{$gte:{$date:"'+ q.t1+'"}, $lte:{$date:"'+q.t2+'"}}}';
     }
     else if (q.hasOwnProperty('t1')){
+		q.t1 = q.t1 + tZoneOffset;
         timeDat = '{recordDate:{$gte:{$date:"'+ q.t1+'"}}}';
     }
     
