@@ -33,7 +33,7 @@ var IllDownData = function(db, user, pwd, filename, cb){
         xhrFields: {
             withCredentials: true
         }
-    }).success(function(data){
+    }).done(function(data){
         console.log('IllDownData ' + data.byteLength);
         cb(data);
     }).fail(function(){
@@ -65,7 +65,7 @@ var IllDownEvent = function(db, user, pwd, filename, cb){
         xhrFields: {
             withCredentials: true
         }
-    }).success(function(data){
+    }).done(function(data){
         var event = JSON.parse(data);
         console.log('IllDownEvent ' + event[0].filename);
         cb(event);
@@ -74,8 +74,27 @@ var IllDownEvent = function(db, user, pwd, filename, cb){
     });
 };
 
-var IllQuery = function (db, user, pwd, q, cb){
-    var tZoneOffset = 5/24;
+var IllUpdateEvent = function(db, user, pwd, filename, op, field){
+    var queryString = $.param({'dbname':db, 'colname':'event', 'user':user, 'passwd': pwd});
+    
+    $.ajax({
+        url: 'https://acoustic.ifp.uiuc.edu:8081/write?'+queryString,
+        data: '{filename:"'+filename+'"}\n{$'+op+':'+field+'}',
+        type:'POST',
+        dataType: 'text',
+        timeOut: 10000,
+        xhrFields: {
+            withCredentials: true
+        }
+    }).done(function(data){
+        console.log('IllUpdateField ' + data);
+    }).fail(function(){
+        console.log('ajax fail');
+    });
+};
+
+var IllQueryEvent = function (db, user, pwd, q, cb){
+    //var tZoneOffset = 5/24;
     
     // Construct the query string
     var params = {'dbname':db, 'colname': 'event', 'user': user, 'passwd': pwd};
@@ -86,12 +105,9 @@ var IllQuery = function (db, user, pwd, q, cb){
     
     // Construct the query data to send
     if (q.hasOwnProperty('t1') && q.hasOwnProperty('t2')){
-		q.t1 = q.t1 + tZoneOffset;
-		q.t2 = q.t2 + tZoneOffset;
         timeDat = '{recordDate:{$gte:{$date:"'+ q.t1+'"}, $lte:{$date:"'+q.t2+'"}}}';
     }
     else if (q.hasOwnProperty('t1')){
-		q.t1 = q.t1 + tZoneOffset;
         timeDat = '{recordDate:{$gte:{$date:"'+ q.t1+'"}}}';
     }
     
@@ -110,7 +126,14 @@ var IllQuery = function (db, user, pwd, q, cb){
         locDat = '';
     }
     
-    postDat = '{$and:['+timeDat+freqDat+locDat+']}';
+    if (q.hasOwnProperty('kw')){
+        kwDat = ',{transcript:"'+q.kw+'"}';
+    }else{
+        kwDat = '';
+    }
+    
+    // FIX: memcached key is too long
+    postDat = '{$and:['+timeDat+freqDat+locDat+kwDat+']}';
     
     $.ajax({
         url: 'https://acoustic.ifp.uiuc.edu:8081/query?'+queryString,
@@ -118,7 +141,7 @@ var IllQuery = function (db, user, pwd, q, cb){
         type:'POST',
         dataType: 'text',
         timeOut: 10000
-    }).success(function(data){
+    }).done(function(data){
         file = JSON.parse(data);
         cb(file);
     }).fail(function(){

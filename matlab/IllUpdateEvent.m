@@ -1,4 +1,4 @@
-% function resp = IllEventField(db, user, pwd, filename, op, field)
+% function resp = IllUpdateEvent(db, user, pwd, filename, op, field)
 % Apply operation 'op' with field 'field' on document 'filename'. 
 %
 % 'field' is json, i.e. has the form {<name>:<value>}.
@@ -9,7 +9,7 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function resp = IllUpdateField(db, user, pwd, filename, op, field)
+function resp = IllUpdateEvent(db, user, pwd, filename, op, field)
 
 params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
