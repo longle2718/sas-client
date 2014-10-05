@@ -6,8 +6,6 @@
 %
 function IllView(db, user, pwd, q)
 
-%addpath(genpath('../acousticsearch/common'))
-q.t1 = datenum(2014,10,5,14,05,0); q.limit = 24;
 events = IllQueryEvent(db, user, pwd, q);
 
 data = cell(1, numel(events));
