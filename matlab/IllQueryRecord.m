@@ -32,7 +32,7 @@ elseif isfield(q, 't1')
     timeDat = ['{uploadDate:{$gte:{$date:"' datestr8601(q.t1, '*ymdHMS3') 'Z"}}}'];
 end
 
-timeDat
+timeDat;
 
 tmp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/query?' queryString], 'POST', timeDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);
