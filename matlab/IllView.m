@@ -4,7 +4,7 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function IllView(db, user, pwd, q)
+function events = IllView(db, user, pwd, q)
 
 events = IllQueryEvent(db, user, pwd, q);
 
