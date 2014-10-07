@@ -15,10 +15,12 @@ addpath(genpath('.'));
 %importcert('illiad.crt')
 
 % Query file list from the database, limited to max 24 files
-q.t1 = datenum(2014,8,19,12,20,0); q.limit = 24;
-events = IllQuery('YourDB', 'YourID', 'YourPwd', q);
+q.limit = 24;
+q.t1 = datenum(2014,10,5,0,0,0); q.t2 = datenum(2014,10,7,0,0,0); 
+%q.f1 = 0; q.f2 = 4000;
+events = IllQueryEvent('publicDb', 'publicUser', 'publicPwd', q);
 % Download first available raw data
-[data, y, header] = IllDownData('YourDB', 'YourID', 'YourPwd', events{1}.filename);
+[data, y, header] = IllDownData('publicDb', 'publicUser', 'publicPwd', events{1}.filename);
 % Play the sound
 soundsc(y, double(header.sampleRate))
 % Send to google voice api for speech recognition, quota 50 requests/day
@@ -28,6 +30,6 @@ soundsc(y, double(header.sampleRate))
 
 
 % Download event descriptor
-event = IllDownEvent('YourDB', 'YourID', 'YourPwd', events{1}.filename);
+event = IllDownEvent('publicDb', 'publicUser', 'publicPwd', events{1}.filename);
 % Display the first event
 event{1}
