@@ -21,9 +21,9 @@ mTcp.Terminator = 'LF';
 fopen(mTcp);
 
 %% Periodically poll database for events
-db = 'publicDb';
-user = 'publicUser';
-pwd = 'publicPwd';
+DB = 'publicDb';
+USER = 'publicUser';
+PWD = 'publicPwd';
 
 period = 1.0;% in second
 lastTime = now;
@@ -34,29 +34,26 @@ while(1)
         
         % periodic query
         q.t1 = lastTime+1/864000; q.t2 = now;
-        file = IllQuery(db, user, pwd, q);
-        if (~iscell(file))
+        events = IllQueryEvent(DB, USER, PWD, q);
+        if (~iscell(events))
             continue;
         end
         
         disp('Found data, start processing...')
-        for k = 1:numel(file)
-            lastTime = datenum8601(file{k}.uploadDate.x0x24_date)-5/24; % last acquired file, local time
-            
-            [data, y, header] = IllDownData(db, user, pwd, file{k}.filename);
-            fs = double(header.sampleRate);
-            event = IllDownEvent(db, user, pwd, file{k}.filename);
-            if (~iscell(event))
-                continue; % invalid event
-            end
+        for k = 1:numel(events)
+            lastTime = datenum8601(events{k}.uploadDate.x0x24_date)-5/24; % last acquired file, local time
             
             % Screen out unlikely event
-            if (~(event{1}.duration >= 0.4*event{1}.fs/event{1}.Nblk && ...
-                    event{1}.bandwidth >=  1000/(event{1}.fs/2)*event{1}.Nfreq && ...
-                    event{1}.logProbAbnom <= -6e2))
+            if (~(events{k}.duration >= 0.4 && ...
+                    events{k}.maxFreq-events{k}.minFreq >=  1000 && ...
+                    events{k}.logProbAbnom <= -6e2))
                 disp('Unlikely, discard')
                 continue;
             end
+            
+            % More likely to be an interesting event, get the raw data
+            [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
+            fs = double(header.sampleRate);
             
             % Run vad
             vs = vadsohn(y, fs);
