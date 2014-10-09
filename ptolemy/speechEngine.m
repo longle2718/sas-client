@@ -41,7 +41,7 @@ while(1)
         
         disp('Found data, start processing...')
         for k = 1:numel(events)
-            lastTime = datenum8601(events{k}.uploadDate.x0x24_date)-5/24; % last acquired file, local time
+            lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
             
             % Screen out unlikely event
             if (~(events{k}.duration >= 0.4 && ...
