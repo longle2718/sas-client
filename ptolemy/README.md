@@ -1,4 +1,4 @@
-Ptolemy II version
+Ptolemy II
 ============
 
 ## Usage

@@ -1,4 +1,4 @@
-Javascript version
+Javascript
 ============
 
 - [illiad.js](https://github.com/long0612/IlliadWeb/blob/master/public_html/js/illiad.js)
