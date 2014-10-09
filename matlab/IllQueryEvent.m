@@ -61,7 +61,7 @@ else
 end
 
 if isfield(q, 'dur1') && isfield(q, 'dur2')
-    durDat = [',{duration:{$gte:' num2str(q.dur1) '}},{maxFreq:{$lte:' num2str(q.dur2) '}}'];
+    durDat = [',{duration:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
 elseif isfield(q, 'f1')
     durDat = [',{duration:{$gte:' num2str(q.dur1) '}}'];
 elseif isfield(q, 'f2')
@@ -71,11 +71,11 @@ else
 end
 
 if isfield(q, 'lnp1') && isfield(q, 'lnp2')
-    lnpDat = [',{logNoiseProb:{$gte:' num2str(q.dur1) '}},{maxFreq:{$lte:' num2str(q.dur2) '}}'];
-elseif isfield(q, 'f1')
-    lnpDat = [',{duration:{$gte:' num2str(q.dur1) '}}'];
-elseif isfield(q, 'f2')
-    lnpDat = [',{duration:{$lte:' num2str(q.dur2) '}}'];    
+    lnpDat = [',{logNoiseProb:{$gte:' num2str(q.lnp1) ', $lte:' num2str(q.lnp2) '}}'];
+elseif isfield(q, 'lnp1')
+    lnpDat = [',{logNoiseProb:{$gte:' num2str(q.lnp1) '}}'];
+elseif isfield(q, 'lnp2')
+    lnpDat = [',{logNoiseProb:{$lte:' num2str(q.lnp2) '}}'];    
 else
     lnpDat = '';
 end
