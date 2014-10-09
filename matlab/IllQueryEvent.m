@@ -53,13 +53,6 @@ else
     freqDat = '';
 end
 
-if isfield(q, 'loc') && isfield(q, 'rad')
-    % loc(1) - lat, loc(2) - lng
-    locDat = [',{location:{$geoWithin:{$centerSphere:[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad) ']}}}'];
-else
-    locDat = '';
-end
-
 if isfield(q, 'dur1') && isfield(q, 'dur2')
     durDat = [',{duration:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
 elseif isfield(q, 'f1')
@@ -80,13 +73,20 @@ else
     lnpDat = '';
 end
 
+if isfield(q, 'loc') && isfield(q, 'rad')
+    % loc(1) - lat, loc(2) - lng
+    locDat = [',{location:{$geoWithin:{$centerSphere:[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad) ']}}}'];
+else
+    locDat = '';
+end
+
 if isfield(q, 'kw')
     kwDat = [',{$text: {$search:"' q.kw '"}}'];
 else
     kwDat = '';
 end
 
-postDat = ['{$and:[' timeDat freqDat locDat durDat lnpDat kwDat ']}'];
+postDat = ['{$and:[' timeDat freqDat durDat lnpDat locDat kwDat ']}'];
 
 tmp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);
