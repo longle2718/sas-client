@@ -12,7 +12,7 @@ addpath(genpath('../matlab'));
 % Import cert into Matlab jvm truststore.
 % Need write access to the truststore (cacerts)
 % Only need to do this once.
-%importcert('../matlab/jetty.crt')  
+%importcert('../matlab/illiad.crt')  
 
 mTcp = tcpip('localhost', 8086); % remote host and port
 mTcp.InputBufferSize = 2^16;
