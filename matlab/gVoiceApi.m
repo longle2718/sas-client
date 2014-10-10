@@ -18,5 +18,5 @@ function [rawresp, resp] = gVoiceApi(key, data)
 params = {'output', 'json', 'lang', 'en-us', 'key', key};
 queryString = http_paramsToString(params);
 header = http_createHeader('Content-Type', 'audio/l16; rate=16000;');
-rawresp = urlread2(['https://www.google.com/speech-api/v2/recognize?' queryString], 'POST', data, header, 'READ_TIMEOUT', 10000);
+rawresp = urlread2(['https://www.google.com/speech-api/v2/recognize?' queryString], 'POST', data, header, 'READ_TIMEOUT', 30000);
 resp = loadjson(rawresp);
