@@ -7,8 +7,8 @@
 % .t2 - ending time. Ex: datenum(2014,8,3,16,22,55)
 % .f1 - lower frequency
 % .f2 - upper frequency
-% .loc - location array of lat and lng
-% .rad - radius around the location
+% .loc - location array of lat and lng: loc(1) - lat, loc(2) - lng
+% .rad - radius around the location, in miles
 % .dur1 - lower duration
 % .dur2 - upper duration
 % .lnp1 - lower log noise prob
@@ -22,6 +22,7 @@ function file = IllQueryEvent(db, user, pwd, q)
 
 % Adjust time zone from Central Time (US) to UTC
 tZoneOffset = 5/24;
+earthRad = 3959; % miles
 
 % Construct the query string
 params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
@@ -73,9 +74,9 @@ else
     lnpDat = '';
 end
 
+
 if isfield(q, 'loc') && isfield(q, 'rad')
-    % loc(1) - lat, loc(2) - lng
-    locDat = [',{location:{$geoWithin:{$centerSphere:[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad) ']}}}'];
+    locDat = [',{location:{$geoWithin:{$centerSphere:[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad/earthRad) ']}}}'];
 else
     locDat = '';
 end

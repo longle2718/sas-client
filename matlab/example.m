@@ -20,10 +20,11 @@ PWD = 'publicPwd';
 
 % Query file list from the database, limited to max 24 files
 q.limit = 24;
-q.t1 = datenum(2014,10,5,0,0,0); q.t2 = datenum(2014,10,7,0,0,0); 
-q.f1 = 0; q.f2 = 4000;
-q.dur1 = 0.0; q.dur2 = 0.5;
-q.lnp2 = 0.0;
+q.t1 = datenum(2014,10,9,0,0,0); q.t2 = datenum(2014,10,11,0,0,0); 
+q.f1 = 0; q.f2 = 6000;
+q.dur1 = 0.6; q.dur2 = 10.0;
+%q.lnp2 = -6e2;
+q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
 events = IllQueryEvent(DB, USER, PWD, q);
 % Download first available raw data
 [data, y, header] = IllDownData(DB, USER, PWD, events{1}.filename);
