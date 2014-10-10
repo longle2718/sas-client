@@ -34,6 +34,9 @@ while(1)
         
         % periodic query
         q.t1 = lastTime+1/864000; q.t2 = now;
+        q.f2 = 6000;
+        q.dur1 = 0.6; 
+        q.lnp2 = -6e2;
         events = IllQueryEvent(DB, USER, PWD, q);
         if (~iscell(events))
             continue;
@@ -43,15 +46,6 @@ while(1)
         for k = 1:numel(events)
             lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
             
-            % Screen out unlikely event
-            if (~(events{k}.duration >= 0.4 && ...
-                    events{k}.maxFreq-events{k}.minFreq >=  1000 && ...
-                    events{k}.logProbAbnom <= -6e2))
-                disp('Unlikely, discard')
-                continue;
-            end
-            
-            % More likely to be an interesting event, get the raw data
             [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
             fs = double(header.sampleRate);
             

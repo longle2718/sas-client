@@ -55,9 +55,9 @@ end
 
 if isfield(q, 'dur1') && isfield(q, 'dur2')
     durDat = [',{duration:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
-elseif isfield(q, 'f1')
+elseif isfield(q, 'dur1')
     durDat = [',{duration:{$gte:' num2str(q.dur1) '}}'];
-elseif isfield(q, 'f2')
+elseif isfield(q, 'dur2')
     durDat = [',{duration:{$lte:' num2str(q.dur2) '}}'];    
 else
     durDat = '';
