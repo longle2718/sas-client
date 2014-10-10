@@ -34,5 +34,5 @@ end
 
 timeDat;
 
-tmp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/query?' queryString], 'POST', timeDat, [], 'READ_TIMEOUT', 10000);
+tmp = urlread2(['https://acoustic.ifp.illinois.edu:8081/query?' queryString], 'POST', timeDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);

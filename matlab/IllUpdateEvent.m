@@ -14,4 +14,4 @@ function resp = IllUpdateEvent(db, user, pwd, filename, op, field)
 params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
 data = sprintf('{filename:"%s"}\n{$%s:%s}', filename, op, field);
-resp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/write?' queryString], 'POST', data, [], 'READ_TIMEOUT', 10000);
+resp = urlread2(['https://acoustic.ifp.illinois.edu:8081/write?' queryString], 'POST', data, [], 'READ_TIMEOUT', 10000);

@@ -9,5 +9,5 @@ function event = IllDownEvent(db, user, pwd, filename)
 
 params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
-tmp = urlread2(['https://acoustic.ifp.uiuc.edu:8081/query?' queryString], 'POST', ['{filename:"' filename '"}'], [], 'READ_TIMEOUT', 10000);
+tmp = urlread2(['https://acoustic.ifp.illinois.edu:8081/query?' queryString], 'POST', ['{filename:"' filename '"}'], [], 'READ_TIMEOUT', 10000);
 event = loadjson(tmp);
