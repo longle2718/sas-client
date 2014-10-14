@@ -12,6 +12,13 @@ function importcert(filename)
     if (~exist([cacerts '.org'],'file'))
         copyfile(cacerts,[cacerts '.org'])
     end
+    % Remove the old key if it already exists
+    try
+        command = sprintf('"%s" -delete -alias "mykey" -keystore "%s" -storepass changeit',keytool,cacerts);
+        dos(command);
+    catch e
+        sprintf('%s', e);
+    end
     % Construct and execute keytool
     command = sprintf('"%s" -import -file "%s" -keystore "%s" -storepass changeit',keytool,filename,cacerts);
     dos(command);
