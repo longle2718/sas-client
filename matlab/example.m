@@ -11,7 +11,7 @@ addpath(genpath('.'));
 % Import cert into Matlab jvm truststore.
 % Default alias is mykey
 % Need write access to the truststore (cacerts)
-% Only need to do this once.
+% Only need to do this once per Matlab copy.
 %importcert('illiad.crt')
 
 DB = 'publicDb';
