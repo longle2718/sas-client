@@ -89,9 +89,5 @@ end
 
 postDat = ['{$and:[' timeDat freqDat durDat lnpDat locDat kwDat ']}'];
 
-try
-    tmp = urlread2(['https://acoustic.ifp.illinois.edu:8081/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
-    file = loadjson(tmp);
-catch e
-    sprintf('%s', e.message);
-end
+tmp = urlread2(['https://acoustic.ifp.illinois.edu:8081/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
+file = loadjson(tmp);
