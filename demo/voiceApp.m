@@ -90,7 +90,7 @@ end
 %[goodbyeW] = wavread('tmp/goodbye.wav');
 %[helloW] = wavread('tmp/hello.wav');
 %[okW, synfs] = wavread('tmp/ok.wav');
-period = 1.0;% in second
+period = 2.0;% in second
 lastTime = now;
 while(1)
     %try
