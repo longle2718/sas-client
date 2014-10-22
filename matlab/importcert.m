@@ -1,3 +1,7 @@
+% Import cert into Matlab jvm truststore.
+% Need write access to the truststore (cacerts)
+% Only need to do this once.
+%importcert('illiad.crt')  
 function importcert(filename)
     if (nargin == 0)
         % If no certificate specified show open file dialog to select
