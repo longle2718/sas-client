@@ -87,9 +87,9 @@ for k = 1:numel(events)
 end
 %}
 %% Online
-[goodbyeW] = wavread('tmp/goodbye.wav');
-[helloW] = wavread('tmp/hello.wav');
-[okW, synfs] = wavread('tmp/ok.wav');
+%[goodbyeW] = wavread('tmp/goodbye.wav');
+%[helloW] = wavread('tmp/hello.wav');
+%[okW, synfs] = wavread('tmp/ok.wav');
 period = 1.0;% in second
 lastTime = now;
 while(1)
