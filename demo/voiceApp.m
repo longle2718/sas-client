@@ -98,9 +98,9 @@ while(1)
         
         % periodic query
         q.t1 = lastTime+1/864000; q.t2 = now;
-        q.f2 = 6000;
-        q.dur1 = 0.6; 
-        q.lnp2 = -6e2;
+        q.f2 = 7000;
+        q.dur1 = 0.3; 
+        q.lnp2 = -1e3;
         fprintf(1, sprintf('polling with t1: %s, t2: %s\n', datestr8601(q.t1), datestr8601(q.t2)));
         try
             events = IllQueryEvent(DB, USER, PWD, q);
