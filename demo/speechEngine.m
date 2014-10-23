@@ -33,8 +33,13 @@ while(1)
         q.f2 = 6000;
         q.dur1 = 0.6; 
         q.lnp2 = -6e2;
-        events = IllQueryEvent(DB, USER, PWD, q);
-        if (~iscell(events))
+        try
+            events = IllQueryEvent(DB, USER, PWD, q);
+            if (~iscell(events))
+                continue;
+            end
+        catch e
+            fprintf(2, sprintf('%s\n', e.message));
             continue;
         end
         
@@ -42,8 +47,13 @@ while(1)
         for k = 1:numel(events)
             lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
             
-            [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
-            fs = double(header.sampleRate);
+            try
+                [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
+                fs = double(header.sampleRate);
+            catch e
+                fprintf(2, sprintf('%s\n', e.message));
+                continue;
+            end
             
             % Run vad
             vs = vadsohn(y, fs);
