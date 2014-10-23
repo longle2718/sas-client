@@ -94,14 +94,14 @@ period = 2.0;% in second
 lastTime = now;
 while(1)
     %try
-        disp('polling...')
         pause(period);
         
         % periodic query
         q.t1 = lastTime+1/864000; q.t2 = now;
         q.f2 = 6000;
         q.dur1 = 0.6; 
-        q.lnp2 = -6e2;        
+        q.lnp2 = -6e2;
+        sprintf('polling with t1: %s, t2: %s', datestr8601(q.t1), datestr8601(q.t2))
         try
             events = IllQueryEvent(DB, USER, PWD, q);
         catch e
