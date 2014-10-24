@@ -28,9 +28,9 @@
     </property>
     <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[700, 502]">
     </property>
-    <property name="_vergilZoomFactor" class="ptolemy.data.expr.ExpertParameter" value="0.6400000000000003">
+    <property name="_vergilZoomFactor" class="ptolemy.data.expr.ExpertParameter" value="1.2500000000000009">
     </property>
-    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{282.00000000000045, 337.9999999999999}">
+    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{267.00000000000045, 479.99999999999966}">
     </property>
     <entity name="HttpActor" class="org.ptolemy.ptango.lib.HttpActor">
         <property name="_location" class="ptolemy.kernel.util.Location" value="[120.0, 315.0]">
@@ -39,7 +39,7 @@
     <entity name="Display" class="ptolemy.actor.lib.gui.Display">
         <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={777, 410, 365, 259}, maximized=false}">
         </property>
-        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute">
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[347, 186]">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="[510.0, 325.0]">
         </property>
@@ -94,8 +94,18 @@
         <property name="_location" class="ptolemy.kernel.util.Location" value="[405.0, 325.0]">
         </property>
     </entity>
-    <relation name="relation2" class="ptolemy.actor.TypedIORelation">
-    </relation>
+    <entity name="Counter" class="ptolemy.actor.lib.Counter">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[280.0, 555.0]">
+        </property>
+    </entity>
+    <entity name="Display3" class="ptolemy.actor.lib.gui.Display">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={1220, 726, 365, 259}, maximized=false}">
+        </property>
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[347, 186]">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[365.0, 555.0]">
+        </property>
+    </entity>
     <relation name="relation3" class="ptolemy.actor.TypedIORelation">
     </relation>
     <relation name="relation4" class="ptolemy.actor.TypedIORelation">
@@ -108,15 +118,26 @@
     </relation>
     <relation name="relation5" class="ptolemy.actor.TypedIORelation">
     </relation>
+    <relation name="relation6" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <vertex name="vertex1" value="{230.0, 450.0}">
+        </vertex>
+    </relation>
+    <relation name="relation2" class="ptolemy.actor.TypedIORelation">
+    </relation>
     <link port="HttpActor.response" relation="relation"/>
     <link port="HttpActor.postRequestURI" relation="relation4"/>
     <link port="Display.input" relation="relation5"/>
-    <link port="Const.output" relation="relation2"/>
+    <link port="Const.output" relation="relation6"/>
     <link port="Const.trigger" relation="relation4"/>
-    <link port="TokenToJSON.input" relation="relation2"/>
+    <link port="TokenToJSON.input" relation="relation6"/>
     <link port="TokenToJSON.output" relation="relation3"/>
     <link port="MicrostepDelay.input" relation="relation3"/>
     <link port="MicrostepDelay.output" relation="relation"/>
     <link port="StringConst.output" relation="relation5"/>
     <link port="StringConst.trigger" relation="relation4"/>
+    <link port="Counter.increment" relation="relation6"/>
+    <link port="Counter.output" relation="relation2"/>
+    <link port="Display3.input" relation="relation2"/>
 </entity>

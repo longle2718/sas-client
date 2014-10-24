@@ -14,7 +14,6 @@ mTcp = tcpip('localhost', 8086); % remote host and port
 mTcp.InputBufferSize = 2^16;
 mTcp.BytesAvailableFcnMode = 'terminator';
 mTcp.Terminator = 'LF';
-fopen(mTcp);
 
 %% Periodically poll database for events
 DB = 'publicDb';
@@ -61,8 +60,10 @@ while(1)
             
             if (mean(vs) > 0.5)
                 disp('Speech detected')
-                msg = sprintf('POST / HTTP/1.0\nConnection: Keep-Alive\n\n');
+                msg = sprintf('POST / HTTP/1.0\n\n');
+                fopen(mTcp);
                 fprintf(mTcp, msg);
+                fclose(mTcp);
             else
                 disp('Not speech!!!')
             end
