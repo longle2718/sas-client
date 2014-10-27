@@ -20,7 +20,7 @@ PWD = 'publicPwd';
 
 ACTUATE = false;
 
-GOOGLE = false;
+GOOGLE = true;
 
 %% Offline
 %{
@@ -132,14 +132,19 @@ while(1)
                 % Send to speech recog
                 disp('Send to speech recog')
 
-                if (GOOGLE)
-                    [tmp, resp] = gVoiceApi('AIzaSyD5NvcrQ54Rbzdxpo3FtJsAyvUjy6O3cn4', data);
-                    %[tmp, resp] = gVoiceApi('AIzaSyCnrAmwikHskQQ0LeEM-bp3TIx1pog9U40', data);
-                    %[tmp, resp] = gVoiceApi('AIzaSyDfTC6ep3rDM-PFD5NdtehR_CKhRqE8i7E', data);
-                    %[tmp, resp] = gVoiceApi('AIzaSyAThZrE-ox2VPc3fHYyBV2g2ThILAqCeaE', data);
-                else
-                    [tmp, resp] = nASRApi('NMDPTRIAL_long_061220140812074638','7e43d074f2f5fd9bb41f3c987dd2c514d8ffeb8f88a325b77ad80a5d1d951f9bd8ef10cae40d66982da231aa74f6bf4cf5aadc7e4d0135c8d93f25f7d44492ac', data);
-                end
+				try 
+	                if (GOOGLE)
+    	                [tmp, resp] = gVoiceApi('AIzaSyD5NvcrQ54Rbzdxpo3FtJsAyvUjy6O3cn4', data);
+        	            %[tmp, resp] = gVoiceApi('AIzaSyCnrAmwikHskQQ0LeEM-bp3TIx1pog9U40', data);
+            	        %[tmp, resp] = gVoiceApi('AIzaSyDfTC6ep3rDM-PFD5NdtehR_CKhRqE8i7E', data);
+                	    %[tmp, resp] = gVoiceApi('AIzaSyAThZrE-ox2VPc3fHYyBV2g2ThILAqCeaE', data);
+                	else
+                    	[tmp, resp] = nASRApi('NMDPTRIAL_long_061220140812074638','7e43d074f2f5fd9bb41f3c987dd2c514d8ffeb8f88a325b77ad80a5d1d951f9bd8ef10cae40d66982da231aa74f6bf4cf5aadc7e4d0135c8d93f25f7d44492ac', data);
+	                end
+				catch e
+                	fprintf(2, sprintf('%s\n', e.message));
+					continue;
+				end
                 
                 if (~iscell(resp))
                     disp('Empty resp')
