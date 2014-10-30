@@ -20,7 +20,7 @@ PWD = 'publicPwd';
 
 ACTUATE = false;
 
-GOOGLE = true;
+GOOGLE = false;
 
 %% Offline
 %{
