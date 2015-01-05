@@ -1,4 +1,4 @@
-% file = IllQueryEvent(db, user, pwd, q)
+% file = IllQueryCol(db, user, pwd, col, q)
 % Time query on the Illinois acoustic server.
 %
 % A query q is a structure of 
@@ -18,14 +18,14 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function file = IllQueryEvent(db, user, pwd, q)
+function file = IllQueryCol(db, user, pwd, col, q)
 
 % Adjust time zone from Central Time (US) to UTC
 tZoneOffset = 5/24;
 earthRad = 3959; % miles
 
 % Construct the query string
-params = {'dbname', db, 'colname', 'event', 'user', user, 'passwd', pwd};
+params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 if (isfield(q, 'limit'))
     params(end+1:end+2) = {'limit', num2str(q.limit)};
 end

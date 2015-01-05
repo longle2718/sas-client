@@ -4,14 +4,14 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function events = IllView(db, user, pwd, q)
+function events = IllView(db, user, pwd, col, gridCol, q)
 
-events = IllQueryEvent(db, user, pwd, q);
+events = IllQueryCol(db, user, pwd, col, q);
 
 data = cell(1, numel(events));
 y = cell(1, numel(events));
 for k = 1:numel(events)
-    [data{k}, y{k}, header] = IllDownData(db, user, pwd, events{k}.filename);
+    [data{k}, y{k}, header] = IllDownGrid(db, user, pwd, gridCol, events{k}.filename);
     fs = double(header.sampleRate);
 end
 
