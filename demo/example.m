@@ -25,9 +25,9 @@ q.f1 = 0; q.f2 = 6000;
 q.dur1 = 0.6; q.dur2 = 10.0;
 %q.lnp2 = -6e2;
 q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
-events = IllQueryEvent(DB, USER, PWD, q);
+events = IllQueryCol(DB, USER, PWD, 'event', q);
 % Download first available raw data
-[data, y, header] = IllDownData(DB, USER, PWD, events{1}.filename);
+[data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
 % Play the sound
 soundsc(y, double(header.sampleRate))
 % Send to google voice api for speech recognition, quota 50 requests/day
@@ -37,6 +37,6 @@ soundsc(y, double(header.sampleRate))
 
 
 % Download event descriptor
-event = IllDownEvent(DB, USER, PWD, events{1}.filename);
+event = IllDownCol(DB, USER, PWD, 'event', events{1}.filename);
 % Display the first event
 event{1}

@@ -33,7 +33,7 @@ while(1)
         q.lnp2 = -1e3;
         fprintf(1, sprintf('polling with t1: %s, t2: %s\n', datestr8601(q.t1), datestr8601(q.t2)));
         try
-            events = IllQueryEvent(DB, USER, PWD, q);
+            events = IllQueryCol(DB, USER, PWD, 'event', q);
             if (~iscell(events))
                 continue;
             end
@@ -47,7 +47,7 @@ while(1)
             lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
             
             try
-                [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
+                [data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{k}.filename);
                 fs = double(header.sampleRate);
             catch e
                 fprintf(2, sprintf('%s\n', e.message));

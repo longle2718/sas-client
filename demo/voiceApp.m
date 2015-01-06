@@ -29,13 +29,13 @@ q.t1 = datenum(2014,10,10,12,0,0); %q.t2 = datenum(2014,10,10,0,0,0);
 q.f2 = 6000;
 q.dur1 = 0.6; 
 %q.lnp2 = -6e2;        
-events = IllQueryEvent(DB, USER, PWD, q);
+events = IllQueryCol(DB, USER, PWD, 'event', q);
 
 for k = 1:numel(events)
     disp('================================')
     disp(k)
 
-    [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
+    [data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{k}.filename);
     fs = double(header.sampleRate);
 
     % Run vad
@@ -80,7 +80,7 @@ for k = 1:numel(events)
         for l = 1:numel(xscript)-1
             xscript{l} = [xscript{l} ' ']; % Add white space between xscript
         end
-        resp = IllUpdateEvent('publicDb', 'publicUser', 'publicPwd', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
+        resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
     else
         disp('Not speech!!!')
     end
@@ -103,7 +103,7 @@ while(1)
         q.lnp2 = -1e3;
         fprintf(1, sprintf('polling with t1: %s, t2: %s\n', datestr8601(q.t1), datestr8601(q.t2)));
         try
-            events = IllQueryEvent(DB, USER, PWD, q);
+            events = IllQueryCol(DB, USER, PWD, 'event', q);
             if (~iscell(events))
                 continue;
             end
@@ -117,7 +117,7 @@ while(1)
             lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
 
             try
-                [data, y, header] = IllDownData(DB, USER, PWD, events{k}.filename);
+                [data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{k}.filename);
                 fs = double(header.sampleRate);
             catch e
                 fprintf(2, sprintf('%s\n', e.message));
@@ -217,7 +217,7 @@ while(1)
                 for l = 1:numel(xscript)-1
                     xscript{l} = [xscript{l} ' ']; % Add white space between xscript
                 end
-                resp = IllUpdateEvent('publicDb', 'publicUser', 'publicPwd', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
+                resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
             else
                 disp('Not speech!!!')
             end
