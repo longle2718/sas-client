@@ -8,8 +8,7 @@ clear all; close all;
 addpath(genpath('../matlab'))
 
 %% Periodically poll database for events
-BRIDGEIP='128.174.210.208';
-%BRIDGEIP='192.168.8.112';
+BRIDGEIP='128.174.226.140';
 USERID='760f6fe5759c473d26b123f29e86b';
 LIGHTID='2';
 %LIGHTID='1';
