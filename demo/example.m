@@ -7,7 +7,7 @@
 
 clear all; close all
 
-addpath(genpath('.'));
+addpath(genpath('../matlab'));
 % Import cert into Matlab jvm truststore.
 % Default alias is mykey
 % Need write access to the truststore (cacerts)
