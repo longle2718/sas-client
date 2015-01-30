@@ -27,7 +27,8 @@ q.dur1 = 0.6; q.dur2 = 10.0;
 q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
 events = IllQueryCol(DB, USER, PWD, 'event', q);
 % Download first available raw data
-[data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
+data = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
+[y, header] = wavread_char(data);
 % Play the sound
 soundsc(y, double(header.sampleRate))
 % Send to google voice api for speech recognition, quota 50 requests/day

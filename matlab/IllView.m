@@ -11,7 +11,8 @@ events = IllQueryCol(db, user, pwd, col, q);
 data = cell(1, numel(events));
 y = cell(1, numel(events));
 for k = 1:numel(events)
-    [data{k}, y{k}, header] = IllDownGrid(db, user, pwd, gridCol, events{k}.filename);
+    data{k} = IllDownGrid(db, user, pwd, gridCol, events{k}.filename);
+    [y{k}, header] = wavread_char(data{k});
     fs = double(header.sampleRate);
 end
 

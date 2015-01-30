@@ -47,7 +47,8 @@ while(1)
             lastTime = datenum8601(events{k}.recordDate.x0x24_date)-5/24; % last acquired file, local time
             
             try
-                [data, y, header] = IllDownGrid(DB, USER, PWD, 'data', events{k}.filename);
+                data = IllDownGrid(DB, USER, PWD, 'data', events{k}.filename);
+                [y, header] = wavread_char(data);
                 fs = double(header.sampleRate);
             catch e
                 fprintf(2, sprintf('%s\n', e.message));
