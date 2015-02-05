@@ -1,6 +1,8 @@
 *.asv
 jsonlab/
 tmp/
+temp/
 V1_1_urlread2/
 *.mp4
 *.bmp
+*.jpg

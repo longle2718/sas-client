@@ -10,9 +10,9 @@
 
 function imageCells = queryVid2Img(vidNum, year1, month1, date1,year2, month2, date2)
 % add paths for additional functions
-addpath(genpath('../MATLAB'));
-addpath(genpath('../json'));
-addpath(genpath('../urlread2'));
+addpath(genpath('../../MATLAB'));
+addpath(genpath('../../jsonlab'));
+addpath(genpath('../../V1_1_urlread2'));
 
 % Import cert into Matlab jvm truststore.
 % Default alias is mykey
