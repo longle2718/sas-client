@@ -2,7 +2,7 @@
 
 DEBUG=true
 if [ $DEBUG = true ]; then
-	BRIDGEIP=128.174.210.208
+	BRIDGEIP=128.174.226.140
 else
 	BRIDGEIP=192.168.1.43
 fi

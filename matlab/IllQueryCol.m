@@ -11,8 +11,8 @@
 % .rad - radius around the location, in miles
 % .dur1 - lower duration
 % .dur2 - upper duration
-% .lnp1 - lower log noise prob
-% .lnp2 - upper log noise prob
+% .lp1 - lower log prob
+% .lp2 - upper log prob
 %
 % Long Le
 % University of Illinois
@@ -64,12 +64,12 @@ else
     durDat = '';
 end
 
-if isfield(q, 'lnp1') && isfield(q, 'lnp2')
-    lnpDat = [',{logNoiseProb:{$gte:' num2str(q.lnp1) ', $lte:' num2str(q.lnp2) '}}'];
-elseif isfield(q, 'lnp1')
-    lnpDat = [',{logNoiseProb:{$gte:' num2str(q.lnp1) '}}'];
-elseif isfield(q, 'lnp2')
-    lnpDat = [',{logNoiseProb:{$lte:' num2str(q.lnp2) '}}'];    
+if isfield(q, 'lp1') && isfield(q, 'lp2')
+    lnpDat = [',{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
+elseif isfield(q, 'lp1')
+    lnpDat = [',{logProb:{$gte:' num2str(q.lp1) '}}'];
+elseif isfield(q, 'lp2')
+    lnpDat = [',{logProb:{$lte:' num2str(q.lp2) '}}'];    
 else
     lnpDat = '';
 end

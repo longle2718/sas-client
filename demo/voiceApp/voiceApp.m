@@ -5,7 +5,7 @@
 %
 
 clear all; close all;
-addpath(genpath('../matlab'))
+addpath(genpath('../../matlab'))
 
 %% Periodically poll database for events
 BRIDGEIP='128.174.226.140';

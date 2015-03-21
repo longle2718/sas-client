@@ -20,7 +20,7 @@ PWD = 'publicPwd';
 
 % Query file list from the database, limited to max 24 files
 q.limit = 24;
-q.t1 = datenum(2014,10,9,0,0,0); q.t2 = datenum(2014,10,11,0,0,0); 
+q.t1 = datenum(2015,3,20,0,0,0); q.t2 = datenum(2015,3,21,0,0,0); 
 q.f1 = 0; q.f2 = 6000;
 q.dur1 = 0.6; q.dur2 = 10.0;
 %q.lnp2 = -6e2;
