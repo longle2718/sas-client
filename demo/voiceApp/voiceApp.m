@@ -80,7 +80,7 @@ for k = 1:numel(events)
         for l = 1:numel(xscript)-1
             xscript{l} = [xscript{l} ' ']; % Add white space between xscript
         end
-        resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
+        resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{tag:"' cell2mat(xscript) '"}']);
     else
         disp('Not speech!!!')
     end
@@ -218,7 +218,7 @@ while(1)
                 for l = 1:numel(xscript)-1
                     xscript{l} = [xscript{l} ' ']; % Add white space between xscript
                 end
-                resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{transcript:"' cell2mat(xscript) '"}']);
+                resp = IllUpdateCol('publicDb', 'publicUser', 'publicPwd', 'event', events{k}.filename, 'set',['{tag:"' cell2mat(xscript) '"}']);
             else
                 disp('Not speech!!!')
             end
