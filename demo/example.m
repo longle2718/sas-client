@@ -19,12 +19,12 @@ USER = 'publicUser';
 PWD = 'publicPwd';
 
 % Query file list from the database, limited to max 24 files
-q.limit = 24;
-q.t1 = datenum(2015,3,20,0,0,0); q.t2 = datenum(2015,3,21,0,0,0); 
-q.f1 = 0; q.f2 = 6000;
-q.dur1 = 0.6; q.dur2 = 10.0;
-%q.lnp2 = -6e2;
-q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
+q.limit = 50;
+q.t1 = datenum(2015,3,22,0,0,0); q.t2 = datenum(2015,3,24,0,0,0); 
+%q.f1 = 0; q.f2 = 6000;
+%q.dur1 = 0.6; q.dur2 = 10.0;
+%q.lnp2 = 6e4;
+%q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
 events = IllQueryCol(DB, USER, PWD, 'event', q);
 % Download first available raw data
 data = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
