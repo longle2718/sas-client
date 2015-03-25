@@ -65,13 +65,13 @@ else
 end
 
 if isfield(q, 'lp1') && isfield(q, 'lp2')
-    lnpDat = [',{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
+    lpDat = [',{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
 elseif isfield(q, 'lp1')
-    lnpDat = [',{logProb:{$gte:' num2str(q.lp1) '}}'];
+    lpDat = [',{logProb:{$gte:' num2str(q.lp1) '}}'];
 elseif isfield(q, 'lp2')
-    lnpDat = [',{logProb:{$lte:' num2str(q.lp2) '}}'];    
+    lpDat = [',{logProb:{$lte:' num2str(q.lp2) '}}'];    
 else
-    lnpDat = '';
+    lpDat = '';
 end
 
 
@@ -87,7 +87,7 @@ else
     kwDat = '';
 end
 
-postDat = ['{$and:[' timeDat freqDat durDat lnpDat locDat kwDat ']}'];
+postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat kwDat ']}'];
 
 tmp = urlread2(['https://acoustic.ifp.illinois.edu:8081/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);
