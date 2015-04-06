@@ -1,7 +1,7 @@
-IlliadAccess
+SAS Access
 ============
 
-Driver code to access the Illinois acoustic database ([Illiad](https://acoustic.ifp.illinois.edu)) service. A video demo
+Driver code to access the swarm acoustic service ([SAS](https://acoustic.ifp.illinois.edu)). A video demo
 can be viewed below [![ScreenShot] (https://github.com/long0612/IlliadAccess/blob/master/demo.png)](http://vimeo.com/104966491).
 
 ## Javascript
