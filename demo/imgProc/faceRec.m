@@ -146,51 +146,59 @@ for arrayID = 1:5
     trainingCoeffs{arrayID} = trainingCoeff;
 end
 
-%% train classifier based on coefficients (svm with gaussian radial base kernal)
 
-%sigmas = linspace(10,150);
-sigmas = linspace(0,1,50);
-overallAccuracies = cell(size(sigmas,2),1);
+%% asks user input
 
-sigCount = 0;
-for sig = 100
-    overallAccuracy = 0;
-    
-    accuracy = cell(5,1);
-    expLabels = cell(5,1);
-    for arrayID = 1:5
-        [accuracy{arrayID},expLabels{arrayID}] = svmGaussian( testingCoeffs{arrayID}, testingLabels{arrayID}, trainingCoeffs{arrayID}, trainingLabels{arrayID}, 0.01,sig,1);
-        overallAccuracy = overallAccuracy + accuracy{arrayID};
-    end
-    sigCount = sigCount +1;
-    overallAccuracies{sigCount} = (overallAccuracy/5);
-    
+la_chooser = input('enter \n 1 for gaussian radial base,\n 2 for multiclass perceptron \n for learning algorithms');
+
+switch(la_chooser)
+    case 1
+        % train classifier based on coefficients (svm with gaussian radial base kernal)
+        
+        %change alpha/sigma values for accuracy testing
+        sigmas = linspace(10,150);
+        alpha = 0.1;
+        overallAccuracies = cell(size(sigmas,2),1);
+        
+        sigCount = 0;
+        % for loop on sigma values
+        for sig = sigmas
+            overallAccuracy = 0;
+
+            accuracy = cell(5,1);
+            expLabels = cell(5,1);
+            for arrayID = 1:5
+                [accuracy{arrayID},expLabels{arrayID}] = svmGaussian( testingCoeffs{arrayID}, testingLabels{arrayID}, trainingCoeffs{arrayID}, trainingLabels{arrayID}, alpha,sig,1);
+                overallAccuracy = overallAccuracy + accuracy{arrayID};
+            end
+            sigCount = sigCount +1;
+            overallAccuracies{sigCount} = (overallAccuracy/5);
+
+        end
+        plot(sigmas,cell2mat(overallAccuracies),'linewidth',4,'color','r');
+    case 2
+        % train classifier based on coefficients (perceptron)
+        % change alpha value(learning rate) for accuracy testing
+        alphas = linspace(0,0.3);
+        overallAccuracies = cell(size(sigmas,2),1);
+
+        sigCount = 0;
+        for alpha = alphas
+            overallAccuracy = 0;
+
+            accuracy = cell(5,1);
+            expLabels = cell(5,1);
+            for arrayID = 1:5
+                [accuracy{arrayID},expLabels{arrayID}] = perceptron( cellfun(@(x) x(1:30),testingCoeffs{arrayID},'UniformOutput',0), testingLabels{arrayID}, cellfun(@(x) x(1:30),trainingCoeffs{arrayID},'UniformOutput',0), trainingLabels{arrayID}, alpha, 1);
+                overallAccuracy = overallAccuracy + accuracy{arrayID};
+            end
+            sigCount = sigCount +1;
+            overallAccuracies{sigCount} = (overallAccuracy/5);
+
+        end
+
+        plot(alphas,cell2mat(overallAccuracies),'linewidth',4,'color','r');
 end
-
-%plot(sigmas,cell2mat(overallAccuracies),'linewidth',4,'color','r');
-
-%% train classifier based on coefficients (perceptron)
-
-%sigmas = linspace(10,150);
-alphas = linspace(0,0.1);
-overallAccuracies = cell(size(sigmas,2),1);
-
-sigCount = 0;
-for alpha = 0.1
-    overallAccuracy = 0;
-    
-    accuracy = cell(5,1);
-    expLabels = cell(5,1);
-    for arrayID = 1:5
-        [accuracy{arrayID},expLabels{arrayID}] = perceptron( cellfun(@(x) x(1:30),testingCoeffs{arrayID},'UniformOutput',0), testingLabels{arrayID}, cellfun(@(x) x(1:30),trainingCoeffs{arrayID},'UniformOutput',0), trainingLabels{arrayID}, alpha, 1);
-        overallAccuracy = overallAccuracy + accuracy{arrayID};
-    end
-    sigCount = sigCount +1;
-    overallAccuracies{sigCount} = (overallAccuracy/5);
-    
-end
-
-%plot(alphas,cell2mat(overallAccuracies),'linewidth',4,'color','r');
 
 
 %% obtain confusion matrix.
