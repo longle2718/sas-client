@@ -50,29 +50,9 @@ for imageID = 1:numImage
     end
 end
 
+%% divide array into 5 for 5-fold test
 
-%% using FLD (not written by me)
-% faceMatrix = [];
-% averageFace = zeros(200,'double');
-% faceLabel = [];
-% for faceID = 1:faceNum
-%    averageFace  = averageFace + faceObjects{faceNum,1};
-% end
-% for faceID = 1:faceNum
-%    faceMatrix = [faceMatrix; imresize(faceObjects{faceID,1}-averageFace,[1,40000])];
-%    faceLabel = [faceLabel; char2label(faceObjects{faceID,2})];
-% end
-% faceMatrix = faceMatrix';
-% FLD(used for testing only)
-% [V, data_fld] = computeFLD(faceMatrix, faceLabel, 10);
-% params.k = 2;
-% class = classifyFace(data_fld(:,1:10)',data_fld(:,11:51)',faceLabel(11:51),'svm',params);
-% 
-% %% divide array into 5 for 5-fold test
-% 
-% imageIDs = mat2cell(linspace(1,faceNum,faceNum),[1],[ceil(faceNum/5),ceil(faceNum/5),ceil(faceNum/5),ceil(faceNum/5),faceNum - (4*ceil(faceNum/5))]);
-% 
-%     
+imageIDs = mat2cell(linspace(1,faceNum,faceNum),[1],[ceil(faceNum/5),ceil(faceNum/5),ceil(faceNum/5),ceil(faceNum/5),faceNum - (4*ceil(faceNum/5))]);
 
 %% obtain average faces and substract/vectorize
 
@@ -169,7 +149,7 @@ end
 %% train classifier based on coefficients (svm with gaussian radial base kernal)
 
 %sigmas = linspace(10,150);
-sigmas = linspace(0,1,50)
+sigmas = linspace(0,1,50);
 overallAccuracies = cell(size(sigmas,2),1);
 
 sigCount = 0;
