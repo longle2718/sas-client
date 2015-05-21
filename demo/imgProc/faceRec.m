@@ -178,6 +178,7 @@ switch(la_chooser)
         end
         plot(sigmas,cell2mat(overallAccuracies),'linewidth',4,'color','r');
     case 2
+        sigmas = linspace(10,150);
         % train classifier based on coefficients (perceptron)
         % change alpha value(learning rate) for accuracy testing
         alphas = linspace(0,0.3);
