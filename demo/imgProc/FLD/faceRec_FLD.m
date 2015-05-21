@@ -1,8 +1,8 @@
 %% Read all image and label
-addpath(genpath('./'));
+addpath(genpath('../'));
 labels = [];
 numImgs = 0;
-fid = fopen(strcat(fileparts(pwd),'/imgProc/testingCases/labels.txt'));
+fid = fopen('../testingCases/labels.txt');
 
 tline = fgetl(fid);
 while ischar(tline)
@@ -14,7 +14,7 @@ fclose(fid);
 
 imageArray = cell(numImgs,2);
 for imageID = 1:numImgs
-    imageArray{imageID,1} = imread(strcat(fileparts(pwd),'/imgProc/testingCases/image',num2str(imageID),'.jpg'));
+    imageArray{imageID,1} = imread(strcat('../testingCases/image',num2str(imageID),'.jpg'));
     imageArray{imageID,2} = labels(imageID);
 end
 
@@ -66,3 +66,4 @@ faceMatrix = faceMatrix';
 [V, data_fld] = computeFLD(faceMatrix, faceLabel, 10);
 params.k = 2;
 class = classifyFace(data_fld(:,1:10)',data_fld(:,11:51)',faceLabel(11:51),'svm',params);
+mean(class == faceLabel(1:10))

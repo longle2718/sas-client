@@ -20,6 +20,7 @@ for imageID = 1:numImgs
 end
 
 %% Randomize array and obtain faceObjs/avgFaces
+rng('default');
 randomImageArray = imageArray(randperm(numImgs),:);
 
 
