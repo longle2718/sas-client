@@ -13,5 +13,5 @@ function resp = IllUpdateCol(db, user, pwd, col, filename, op, field)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
-data = sprintf('{filename:"%s"}\n{$%s:%s}', filename, op, field);
+data = sprintf('{"filename":"%s"}\n{"$%s":%s}', filename, op, field);
 resp = urlread2(['http://acoustic.ifp.illinois.edu:8956/write?' queryString], 'POST', data, [], 'READ_TIMEOUT', 10000);

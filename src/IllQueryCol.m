@@ -5,14 +5,8 @@
 % .limit - cap on return items. A limit of 0 is equivalent to no limit.
 % .t1 - starting time. Ex: datenum(2014,8,3,16,22,44)
 % .t2 - ending time. Ex: datenum(2014,8,3,16,22,55)
-% .f1 - lower frequency
-% .f2 - upper frequency
 % .loc - location array of lat and lng: loc(1) - lat, loc(2) - lng
 % .rad - radius around the location, in miles
-% .dur1 - lower duration
-% .dur2 - upper duration
-% .lp1 - lower log prob
-% .lp2 - upper log prob
 %
 % Long Le
 % University of Illinois
@@ -21,7 +15,7 @@
 function file = IllQueryCol(db, user, pwd, col, q)
 
 % Adjust time zone from Central Time (US) to UTC
-tZoneOffset = 5/24;
+%tZoneOffset = 5/24;
 earthRad = 3959; % miles
 
 % Construct the query string
@@ -33,17 +27,17 @@ queryString = http_paramsToString(params);
 
 % Construct the query data to send
 if isfield(q, 't1') && isfield(q,'t2')
-    q.t1 = q.t1 + tZoneOffset;
-    q.t2 = q.t2 + tZoneOffset;
-    timeDat = ['{recordDate:{$gte:{$date:"' datestr8601(q.t1, '*ymdHMS3') 'Z"}, $lte:{$date:"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
+    %q.t1 = q.t1 + tZoneOffset;
+    %q.t2 = q.t2 + tZoneOffset;
+    timeDat = ['{"recordDate":{"$gte":{"$date":"' datestr8601(q.t1, '*ymdHMS3') 'Z"}, "$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 elseif isfield(q, 't1')
-    q.t1 = q.t1 + tZoneOffset;
-    timeDat = ['{recordDate:{$gte:{$date:"' datestr8601(q.t1, '*ymdHMS3') 'Z"}}}'];
+    %q.t1 = q.t1 + tZoneOffset;
+    timeDat = ['{"recordDate":{"$gte":{"$date":"' datestr8601(q.t1, '*ymdHMS3') 'Z"}}}'];
 elseif isfield(q, 't2')
-    q.t2 = q.t2 + tZoneOffset;
-    timeDat = ['{recordDate:{$lte:{$date:"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
+    %q.t2 = q.t2 + tZoneOffset;
+    timeDat = ['{"recordDate":{"$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 end
-
+%{
 if isfield(q, 'f1') && isfield(q, 'f2')
     freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
 elseif isfield(q, 'f1')
@@ -73,21 +67,22 @@ elseif isfield(q, 'lp2')
 else
     lpDat = '';
 end
-
+%}
 
 if isfield(q, 'loc') && isfield(q, 'rad')
-    locDat = [',{location:{$geoWithin:{$centerSphere:[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad/earthRad) ']}}}'];
+    locDat = [',{"location":{"$geoWithin":{"$centerSphere":[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad/earthRad) ']}}}'];
 else
     locDat = '';
 end
 
 if isfield(q, 'kw')
-    kwDat = [',{$text: {$search:"' q.kw '"}}'];
+    kwDat = [',{"$text": {"$search":"' q.kw '"}}'];
 else
     kwDat = '';
 end
 
-postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat kwDat ']}'];
+%postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat kwDat ']}'];
+postDat = ['{"$and":[' timeDat locDat kwDat ']}'];
 
 tmp = urlread2(['http://acoustic.ifp.illinois.edu:8956/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 10000);
 file = loadjson(tmp);

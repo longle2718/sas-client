@@ -7,7 +7,9 @@
 
 clear all; close all
 
-addpath(genpath('../matlab'));
+addpath(genpath('../src'));
+addpath(genpath('../../jsonlab'));
+addpath(genpath('../../V1_1_urlread2'));
 % Import cert into Matlab jvm truststore.
 % Default alias is mykey
 % Need write access to the truststore (cacerts)
@@ -20,11 +22,13 @@ PWD = 'publicPwd';
 
 % Query file list from the database, limited to max 24 files
 q.limit = 50;
-q.t1 = datenum(2015,3,22,0,0,0); q.t2 = datenum(2015,3,24,0,0,0); 
-%q.f1 = 0; q.f2 = 6000;
-%q.dur1 = 0.6; q.dur2 = 10.0;
-%q.lnp2 = 6e4;
-%q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
+q.t1 = datenum(2015,9,23,22,50,0); q.t2 = datenum(2015,9,25,0,0,0);
+q.loc(1) = 40.1069855; q.loc(2) = -88.2244681; q.rad = 1;
+%{
+q.f1 = 0; q.f2 = 6000;
+q.dur1 = 0.6; q.dur2 = 10.0;
+q.lnp2 = 6e4;
+%}
 events = IllQueryCol(DB, USER, PWD, 'event', q);
 % Download first available raw data
 data = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
