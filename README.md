@@ -6,8 +6,10 @@ can be viewed below [![ScreenShot] (https://github.com/long0612/IlliadAccess/blo
 
 ## Directory structure
 src/ -- source code
+
 demo/ -- some demos
 
 ## Author
 Long Le <longle1@illinois.edu>
+
 University of Illinois
