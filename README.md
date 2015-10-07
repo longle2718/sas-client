@@ -9,5 +9,5 @@ src/ -- source code
 demo/ -- some demos
 
 ## Author
-Long Le
+Long Le <longle1@illinois.edu>
 University of Illinois
