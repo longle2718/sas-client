@@ -1,4 +1,4 @@
-% function resp = IllDeleteCol(db, user, pwd, col, filename)
+% function resp = IllDeleteCol(servAddr, db, user, pwd, col, filename)
 % Apply operation 'op' with field 'field' on document 'filename'. 
 %
 % 'field' is json, i.e. has the form {<name>:<value>}.
@@ -9,8 +9,8 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function resp = IllDeleteCol(db, user, pwd, col, filename)
+function resp = IllDeleteCol(servAddr, db, user, pwd, col, filename)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd, 'filename', filename};
 queryString = http_paramsToString(params);
-resp = urlread2(['http://acoustic.ifp.illinois.edu:8956/write?' queryString], 'DELETE', [], [], 'READ_TIMEOUT', 15000);
+resp = urlread2(['http://' servAddr ':8956/write?' queryString], 'DELETE', [], [], 'READ_TIMEOUT', 15000);

@@ -12,7 +12,7 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function file = IllQueryCol(db, user, pwd, col, q)
+function file = IllQueryCol(servAddr, db, user, pwd, col, q)
 
 % Adjust time zone from Central Time (US) to UTC
 %tZoneOffset = 5/24;
@@ -84,5 +84,5 @@ end
 %postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat kwDat ']}'];
 postDat = ['{"$and":[' timeDat locDat kwDat ']}'];
 
-tmp = urlread2(['http://acoustic.ifp.illinois.edu:8956/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 15000);
+tmp = urlread2(['http://' servAddr ':8956/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 15000);
 file = loadjson(tmp);
