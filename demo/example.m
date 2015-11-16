@@ -16,6 +16,7 @@ addpath(genpath('../../V1_1_urlread2'));
 % Only need to do this once per Matlab copy.
 %importcert('illiad.crt')
 
+servAddr = 'acoustic.ifp.illinois.edu';
 DB = 'publicDb';
 USER = 'publicUser';
 PWD = 'publicPwd';
@@ -29,9 +30,9 @@ q.f1 = 0; q.f2 = 6000;
 q.dur1 = 0.6; q.dur2 = 10.0;
 q.lnp2 = 6e4;
 %}
-events = IllQueryCol(DB, USER, PWD, 'event', q);
+events = IllQueryCol(servAddr,DB, USER, PWD, 'event', q);
 % Download first available raw data
-data = IllDownGrid(DB, USER, PWD, 'data', events{1}.filename);
+data = IllDownGrid(servAddr,DB, USER, PWD, 'data', events{1}.filename);
 [y, header] = wavread_char(data);
 % Play the sound
 soundsc(y, double(header.sampleRate))
@@ -42,6 +43,6 @@ soundsc(y, double(header.sampleRate))
 
 
 % Download event descriptor
-event = IllDownCol(DB, USER, PWD, 'event', events{1}.filename);
+event = IllDownCol(servAddr,DB, USER, PWD, 'event', events{1}.filename);
 % Display the first event
 event{1}

@@ -1,4 +1,4 @@
-% function rawdat = IllDownGrid(db, user, pwd, gridCol, filename)
+% function rawdat = IllDownGrid(servAddr, db, user, pwd, gridCol, filename)
 % Download data given a filename
 %
 % rawdat is a char matrix

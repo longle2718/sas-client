@@ -1,4 +1,4 @@
-% file = IllQueryCol(db, user, pwd, col, q)
+% file = IllQueryCol(servAddr, db, user, pwd, col, q)
 % Time query on the Illinois acoustic server.
 %
 % A query q is a structure of 
