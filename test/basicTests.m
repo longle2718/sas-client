@@ -47,6 +47,8 @@ fprintf(1, 'Test %d: query event', numTest);
 q.limit = 50;
 q.t1 = datenum(2015,11,19,00,00,00); q.t2 = datenum(2015,11,20,00,00,00);
 q.loc(1) = 39.828175; q.loc(2) = -98.5795; q.rad = 600;
+% DO NOT test post /register, will create leaked memory in the remote
+% server
 events = IllQueryCol(servAddr,DB, USER, PWD, EVENT, q);
 
 if (iscell(events))
@@ -134,7 +136,7 @@ else
 end
 %====================================================
 numTest = numTest + 1;
-fprintf(1, 'Test %d: send data', numTest);
+fprintf(1, 'Test %d: infer', numTest);
 
 resp = IllSendInfer(servAddr, DB, USER, PWD, EVENT, 'speech', 'testPoint');
 jsonResp = loadjson(resp);
