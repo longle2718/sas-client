@@ -69,11 +69,11 @@ else
     fprintf(1, '... FAILED\n');
 end
 %====================================================
-%====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: send event', numTest);
 
-aEvent.filename = 'testEvent';
+aEvent.filename = 'testPoint';
+aEvent.key = PWD;
 aEvent.a = 1;
 status = IllSendCol(servAddr, DB, USER, PWD, EVENT, aEvent);
 
@@ -88,7 +88,7 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: update event', numTest);
 
 aEvent.a = 1;
-resp = IllUpdateCol(servAddr, DB, USER, PWD, EVENT, 'testEvent', 'inc', '{"a":1}');
+resp = IllUpdateCol(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
 jsonResp = loadjson(resp);
 
 if (isfield(jsonResp,'ok'))
@@ -97,30 +97,16 @@ if (isfield(jsonResp,'ok'))
 else
     fprintf(1, '... FAILED\n');
 end
-%====================================================
-numTest = numTest + 1;
-fprintf(1, 'Test %d: delete event', numTest);
-
-resp = IllDeleteCol(servAddr, DB, USER, PWD, EVENT, 'testEvent');
-jsonResp = loadjson(resp);
-
-if (isfield(jsonResp,'ok'))
-    fprintf(1, '... PASSED\n');
-    numPass = numPass + 1;
-else
-    fprintf(1, '... FAILED\n');
-end
-%====================================================
 %====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: send data', numTest);
 
 fid = fopen('./hello.wav','r');
-data = fread(fid);
+data = fread(fid,'*char');
 fclose(fid);
-resp = IllSendGrid(servAddr, DB, USER, PWD, DATA, 'testData', data);
+resp = IllSendGrid(servAddr, DB, USER, PWD, DATA, 'testPoint', data);
 
-if (1)
+if (strfind(resp,'file inserted'))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -131,7 +117,7 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: download data', numTest);
 
 % Download first available raw data
-data = IllDownGrid(servAddr, DB, USER, PWD, DATA, 'testData');
+data = IllDownGrid(servAddr, DB, USER, PWD, DATA, 'testPoint');
 %[y, header] = wavread_char(data);
 % Play the sound
 %soundsc(y, double(header.sampleRate))
@@ -148,11 +134,37 @@ else
 end
 %====================================================
 numTest = numTest + 1;
+fprintf(1, 'Test %d: send data', numTest);
+
+resp = IllSendInfer(servAddr, DB, USER, PWD, EVENT, 'speech', 'testPoint');
+jsonResp = loadjson(resp);
+
+if isstruct(jsonResp{1})
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: delete event', numTest);
+
+resp = IllDeleteCol(servAddr, DB, USER, PWD, EVENT, 'testPoint');
+jsonResp = loadjson(resp);
+
+if (isfield(jsonResp,'ok'))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
 fprintf(1, 'Test %d: delete data', numTest);
 
-resp = IllDeleteGrid(servAddr, DB, USER, PWD, DATA, 'testData');
+resp = IllDeleteGrid(servAddr, DB, USER, PWD, DATA, 'testPoint');
 
-if (1)
+if (strfind(resp,'file deleted'))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
