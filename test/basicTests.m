@@ -39,29 +39,6 @@ else
     fprintf(1, '... FAILED\n');
 end
 %====================================================
-numTest = numTest + 1;
-fprintf(1, 'Test %d: upload event', numTest);
-
-
-
-if (1)
-    fprintf(1, '... PASSED\n');
-    numPass = numPass + 1;
-else
-    fprintf(1, '... FAILED\n');
-end
-%====================================================
-numTest = numTest + 1;
-fprintf(1, 'Test %d: upload data', numTest);
-
-
-
-if (1)
-    fprintf(1, '... PASSED\n');
-    numPass = numPass + 1;
-else
-    fprintf(1, '... FAILED\n');
-end
 %====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: query event', numTest);
@@ -80,10 +57,81 @@ else
 end
 %====================================================
 numTest = numTest + 1;
+fprintf(1, 'Test %d: download event', numTest);
+
+% Download event 
+event = IllDownCol(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
+
+if (iscell(event))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+%====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: send event', numTest);
+
+aEvent.filename = 'testEvent';
+aEvent.a = 1;
+status = IllSendCol(servAddr, DB, USER, PWD, EVENT, aEvent);
+
+if (strfind(status,'doc inserted'))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: update event', numTest);
+
+aEvent.a = 1;
+resp = IllUpdateCol(servAddr, DB, USER, PWD, EVENT, 'testEvent', 'inc', '{"a":1}');
+jsonResp = loadjson(resp);
+
+if (isfield(jsonResp,'ok'))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: delete event', numTest);
+
+resp = IllDeleteCol(servAddr, DB, USER, PWD, EVENT, 'testEvent');
+jsonResp = loadjson(resp);
+
+if (isfield(jsonResp,'ok'))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+%====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: send data', numTest);
+
+fid = fopen('./hello.wav','r');
+data = fread(fid);
+fclose(fid);
+resp = IllSendGrid(servAddr, DB, USER, PWD, DATA, 'testData', data);
+
+if (1)
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
 fprintf(1, 'Test %d: download data', numTest);
 
 % Download first available raw data
-data = IllDownGrid(servAddr,DB, USER, PWD, DATA, events{1}.filename);
+data = IllDownGrid(servAddr, DB, USER, PWD, DATA, 'testData');
 %[y, header] = wavread_char(data);
 % Play the sound
 %soundsc(y, double(header.sampleRate))
@@ -100,12 +148,11 @@ else
 end
 %====================================================
 numTest = numTest + 1;
-fprintf(1, 'Test %d: download event', numTest);
+fprintf(1, 'Test %d: delete data', numTest);
 
-% Download event 
-event = IllDownCol(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
+resp = IllDeleteGrid(servAddr, DB, USER, PWD, DATA, 'testData');
 
-if (iscell(event))
+if (1)
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else

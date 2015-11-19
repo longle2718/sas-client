@@ -1,4 +1,4 @@
-% function resp = IllUpdateCol(db, user, pwd, col, filename, op, field)
+% function resp = IllUpdateCol(servAddr, db, user, pwd, col, filename, op, field)
 % Apply operation 'op' with field 'field' on document 'filename'. 
 %
 % 'field' is json, i.e. has the form {<name>:<value>}.
@@ -9,9 +9,9 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function resp = IllUpdateCol(db, user, pwd, col, filename, op, field)
+function resp = IllUpdateCol(servAddr, db, user, pwd, col, filename, op, field)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
 data = sprintf('{"filename":"%s"}\n{"$%s":%s}', filename, op, field);
-resp = urlread2(['http://acoustic.ifp.illinois.edu:8956/write?' queryString], 'PUT', data, [], 'READ_TIMEOUT', 15000);
+resp = urlread2(['http://' servAddr ':8956/write?' queryString], 'PUT', data, [], 'READ_TIMEOUT', 15000);
