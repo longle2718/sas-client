@@ -8,4 +8,4 @@ function status = IllSendCol(servAddr, db, user, pwd, col, aEvent)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
-status = urlread2(['http://' servAddr ':8956/write?' queryString], 'POST', savejson('',aEvent), [], 'READ_TIMEOUT', 10000);
+status = urlread2(['http://' servAddr ':8956/col?' queryString], 'POST', savejson('',aEvent), [], 'READ_TIMEOUT', 10000);
