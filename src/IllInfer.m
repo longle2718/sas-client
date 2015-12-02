@@ -1,10 +1,10 @@
-% function status = IllSendInfer(servAddr, db, user, pwd, col, event)
+% function status = IllInfer(servAddr, db, user, pwd, col, event)
 % Download event given a filename
 %
 % Long Le <longle1@illinois.edu>
 % University of Illinois
 %
-function status = IllSendInfer(servAddr, db, user, pwd, col, classname, filename)
+function status = IllInfer(servAddr, db, user, pwd, col, classname, filename)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd, 'classname', classname};
 queryString = http_paramsToString(params);

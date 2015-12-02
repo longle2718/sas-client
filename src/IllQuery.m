@@ -1,4 +1,4 @@
-% file = IllQueryCol(servAddr, db, user, pwd, col, q)
+% file = IllQuery(servAddr, db, user, pwd, col, q)
 % Time query on the Illinois acoustic server.
 %
 % A query q is a structure of 
@@ -12,7 +12,7 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function file = IllQueryCol(servAddr, db, user, pwd, col, q)
+function file = IllQuery(servAddr, db, user, pwd, col, q)
 
 % Adjust time zone from Central Time (US) to UTC
 %tZoneOffset = 5/24;
