@@ -30,7 +30,7 @@ numPass = 0; % number of tests passed
 numTest = numTest + 1;
 fprintf(1, 'Test %d: check status', numTest);
 
-status = IllGetStatus(servAddr);
+status = IllStatusGet(servAddr);
 
 if (strfind(status,'OK'))
     fprintf(1, '... PASSED\n');
@@ -62,7 +62,7 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: download event', numTest);
 
 % Download event 
-event = IllDownCol(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
+event = IllColGet(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
 
 if (iscell(event))
     fprintf(1, '... PASSED\n');
@@ -77,7 +77,7 @@ fprintf(1, 'Test %d: send event', numTest);
 aEvent.filename = 'testPoint';
 aEvent.key = PWD;
 aEvent.a = 1;
-status = IllSendCol(servAddr, DB, USER, PWD, EVENT, aEvent);
+status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent);
 
 if (strfind(status,'doc inserted'))
     fprintf(1, '... PASSED\n');
@@ -90,7 +90,7 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: update event', numTest);
 
 aEvent.a = 1;
-resp = IllUpdateCol(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
+resp = IllColPut(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
 jsonResp = loadjson(resp);
 
 if (isfield(jsonResp,'ok'))
@@ -106,7 +106,7 @@ fprintf(1, 'Test %d: send data', numTest);
 fid = fopen('./hello.wav','r');
 data = fread(fid,'*char');
 fclose(fid);
-resp = IllSendGrid(servAddr, DB, USER, PWD, DATA, 'testPoint', data);
+resp = IllGridPost(servAddr, DB, USER, PWD, DATA, 'testPoint', data);
 
 if (strfind(resp,'file inserted'))
     fprintf(1, '... PASSED\n');
@@ -119,7 +119,7 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: download data', numTest);
 
 % Download first available raw data
-data = IllDownGrid(servAddr, DB, USER, PWD, DATA, 'testPoint');
+data = IllGridGet(servAddr, DB, USER, PWD, DATA, 'testPoint');
 %[y, header] = wavread_char(data);
 % Play the sound
 %soundsc(y, double(header.sampleRate))
@@ -151,7 +151,7 @@ end
 numTest = numTest + 1;
 fprintf(1, 'Test %d: delete event', numTest);
 
-resp = IllDeleteCol(servAddr, DB, USER, PWD, EVENT, 'testPoint');
+resp = IllColDelete(servAddr, DB, USER, PWD, EVENT, 'testPoint');
 jsonResp = loadjson(resp);
 
 if (isfield(jsonResp,'ok'))

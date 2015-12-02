@@ -1,4 +1,4 @@
-% function resp = IllUpdateCol(servAddr, db, user, pwd, col, filename, op, field)
+% function resp = IllColPut(servAddr, db, user, pwd, col, filename, op, field)
 % Apply operation 'op' with field 'field' on document 'filename'. 
 %
 % 'field' is json, i.e. has the form {<name>:<value>}.
@@ -9,7 +9,7 @@
 % University of Illinois
 % longle1@illinois.edu
 %
-function resp = IllUpdateCol(servAddr, db, user, pwd, col, filename, op, field)
+function resp = IllColPut(servAddr, db, user, pwd, col, filename, op, field)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
