@@ -7,7 +7,7 @@
 %
 function event = IllDownCol(servAddr, db, user, pwd, col, filename)
 
-params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
+params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd, 'filename', filename};
 queryString = http_paramsToString(params);
-tmp = urlread2(['http://' servAddr ':8956/col?' queryString], 'GET', ['{"$and":[{"filename":"' filename '"}]}'], [], 'READ_TIMEOUT', 10000);
+tmp = urlread2(['http://' servAddr ':8956/col?' queryString], 'GET', [], [], 'READ_TIMEOUT', 10000);
 event = loadjson(tmp);
