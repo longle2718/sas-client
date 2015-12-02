@@ -164,7 +164,7 @@ end
 numTest = numTest + 1;
 fprintf(1, 'Test %d: delete data', numTest);
 
-resp = IllDeleteGrid(servAddr, DB, USER, PWD, DATA, 'testPoint');
+resp = IllGridDelete(servAddr, DB, USER, PWD, DATA, 'testPoint');
 
 if (strfind(resp,'file deleted'))
     fprintf(1, '... PASSED\n');
