@@ -75,14 +75,14 @@ else
     locDat = '';
 end
 
-if isfield(q, 'kw')
-    kwDat = [',{"$text": {"$search":"' q.kw '"}}'];
+if isfield(q, 'tag')
+    tagDat = [',{"$text": {"$search":"' q.kw '"}}'];
 else
-    kwDat = '';
+    tagDat = '';
 end
 
-%postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat kwDat ']}'];
-postDat = ['{"$and":[' timeDat locDat kwDat ']}'];
+%postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat tagDat ']}'];
+postDat = ['{"$and":[' timeDat locDat tagDat ']}'];
 
 tmp = urlread2(['http://' servAddr ':8956/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 15000);
 file = loadjson(tmp);
