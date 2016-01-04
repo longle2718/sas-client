@@ -154,7 +154,7 @@ fprintf(1, 'Test %d: delete event', numTest);
 resp = IllColDelete(servAddr, DB, USER, PWD, EVENT, 'testPoint');
 jsonResp = loadjson(resp);
 
-if (isfield(jsonResp,'ok'))
+if isfield(jsonResp,'ok') && jsonResp.ok == 1
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
