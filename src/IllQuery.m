@@ -76,7 +76,7 @@ else
 end
 
 if isfield(q, 'tag')
-    tagDat = [',{"$text": {"$search":"' q.kw '"}}'];
+    tagDat = [',{"$text": {"$search":"' q.tag '"}}'];
 else
     tagDat = '';
 end
