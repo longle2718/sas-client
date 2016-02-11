@@ -7,9 +7,10 @@ Video: A voice-controlled smart light using the service.
 [![ScreenShot] (https://github.com/long0612/IlliadAccess/blob/master/demo.png)](http://vimeo.com/104966491).
 
 ## Directory structure
-src/ -- source code
 
 demo/ -- some demos
+
+src/ -- source code
 
 test/ -- some tests to verify working code
 
