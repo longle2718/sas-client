@@ -1,7 +1,7 @@
 Client code to SAS
 ==================
 
-Client code to the swarm acoustic service ([SAS](https://acoustic.ifp.illinois.edu)). 
+Client code to the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu)). 
 
 ## Examples using the service
 
