@@ -3,6 +3,10 @@ Client code to SAS
 
 Client code to the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu)). 
 
+## Dependencies
+[jsonlab](http://www.mathworks.com/matlabcentral/fileexchange/33381-jsonlab--a-toolbox-to-encode-decode-json-files)
+[urlread2](http://www.mathworks.com/matlabcentral/fileexchange/35693-urlread2)
+
 ## Examples using the service
 
 Video: A voice-controlled smart light using the service.
