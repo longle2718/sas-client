@@ -53,12 +53,25 @@ else
 end
 %====================================================
 numTest = numTest + 1;
+fprintf(1, 'Test %d: send event', numTest);
+
+aEvent.filename = 'testPoint';
+aEvent.key = PWD;
+aEvent.a = 1;
+status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent);
+
+if (strfind(status,'doc inserted'))
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
+%====================================================
+numTest = numTest + 1;
 fprintf(1, 'Test %d: query event', numTest);
 
 % Query limited files from the database
-q.limit = 50;
-q.t1 = datenum(2015,11,19,00,00,00); q.t2 = datenum(2015,11,20,00,00,00);
-q.loc(1) = 39.828175; q.loc(2) = -98.5795; q.rad = 600;
+q.filename = 'testPoint';
 % DO NOT test post /register, will create leaked memory in the remote
 % server
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);
@@ -77,21 +90,6 @@ fprintf(1, 'Test %d: download event', numTest);
 event = IllColGet(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
 
 if (iscell(event))
-    fprintf(1, '... PASSED\n');
-    numPass = numPass + 1;
-else
-    fprintf(1, '... FAILED\n');
-end
-%====================================================
-numTest = numTest + 1;
-fprintf(1, 'Test %d: send event', numTest);
-
-aEvent.filename = 'testPoint';
-aEvent.key = PWD;
-aEvent.a = 1;
-status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent);
-
-if (strfind(status,'doc inserted'))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -147,6 +145,7 @@ else
     fprintf(1, '... FAILED\n');
 end
 %====================================================
+%{
 numTest = numTest + 1;
 fprintf(1, 'Test %d: infer', numTest);
 
@@ -159,6 +158,7 @@ if isstruct(jsonResp{1})
 else
     fprintf(1, '... FAILED\n');
 end
+%}
 %====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: delete event', numTest);

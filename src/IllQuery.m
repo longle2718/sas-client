@@ -36,6 +36,8 @@ elseif isfield(q, 't1')
 elseif isfield(q, 't2')
     %q.t2 = q.t2 + tZoneOffset;
     timeDat = ['{"recordDate":{"$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
+else
+    timeDat = '';
 end
 %{
 if isfield(q, 'f1') && isfield(q, 'f2')
