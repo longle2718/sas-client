@@ -16,6 +16,7 @@ addpath(genpath('../../V1_1_urlread2'));
 %importcert('illiad.crt')
 
 servAddr = 'acoustic.ifp.illinois.edu';
+%servAddr = '192.168.8.105';
 DB = 'publicDb';
 USER = 'nan';
 PWD = 'publicPwd';
@@ -39,6 +40,17 @@ else
     fprintf(1, '... FAILED\n');
 end
 %====================================================
+numTest = numTest + 1;
+fprintf(1, 'Test %d: check models', numTest);
+
+models = IllModelGet(servAddr);
+
+if iscell(models)
+    fprintf(1, '... PASSED\n');
+    numPass = numPass + 1;
+else
+    fprintf(1, '... FAILED\n');
+end
 %====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: query event', numTest);

@@ -1,8 +1,6 @@
 % function status = IllStatusGet(serviceAddr)
 % get remote service status
 %
-% rawdat is a string
-%
 % Long Le <longle1@illinois.edu>
 % University of Illinois
 %
