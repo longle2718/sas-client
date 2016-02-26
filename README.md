@@ -23,6 +23,6 @@ src/ -- source code
 test/ -- some tests to verify working code
 
 ## Contact
-Long Le <longle1 AT illinois DOT edu>
+Long Le \<longle1 AT illinois DOT edu\>
 
 University of Illinois at Urbana-Champaign
