@@ -39,7 +39,6 @@ elseif isfield(q, 't2')
 else
     timeDat = '';
 end
-%{
 if isfield(q, 'f1') && isfield(q, 'f2')
     freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
 elseif isfield(q, 'f1')
@@ -51,15 +50,16 @@ else
 end
 
 if isfield(q, 'dur1') && isfield(q, 'dur2')
-    durDat = [',{duration:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
+    durDat = [',{maxDur:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
 elseif isfield(q, 'dur1')
-    durDat = [',{duration:{$gte:' num2str(q.dur1) '}}'];
+    durDat = [',{maxDur:{$gte:' num2str(q.dur1) '}}'];
 elseif isfield(q, 'dur2')
-    durDat = [',{duration:{$lte:' num2str(q.dur2) '}}'];    
+    durDat = [',{maxDur:{$lte:' num2str(q.dur2) '}}'];    
 else
     durDat = '';
 end
 
+%{
 if isfield(q, 'lp1') && isfield(q, 'lp2')
     lpDat = [',{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
 elseif isfield(q, 'lp1')
