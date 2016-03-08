@@ -37,54 +37,56 @@ elseif isfield(q, 't2')
     %q.t2 = q.t2 + tZoneOffset;
     timeDat = ['{"recordDate":{"$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 else
-    timeDat = '';
+    timeDat = [];
 end
 if isfield(q, 'f1') && isfield(q, 'f2')
-    freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
+    freqDat = ['{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
 elseif isfield(q, 'f1')
-    freqDat = [',{minFreq:{$gte:' num2str(q.f1) '}}'];
+    freqDat = ['{minFreq:{$gte:' num2str(q.f1) '}}'];
 elseif isfield(q, 'f2')
-    freqDat = [',{maxFreq:{$lte:' num2str(q.f2) '}}'];
+    freqDat = ['{maxFreq:{$lte:' num2str(q.f2) '}}'];
 else
-    freqDat = '';
+    freqDat = [];
 end
 
 if isfield(q, 'dur1') && isfield(q, 'dur2')
-    durDat = [',{maxDur:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
+    durDat = ['{maxDur:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
 elseif isfield(q, 'dur1')
-    durDat = [',{maxDur:{$gte:' num2str(q.dur1) '}}'];
+    durDat = ['{maxDur:{$gte:' num2str(q.dur1) '}}'];
 elseif isfield(q, 'dur2')
-    durDat = [',{maxDur:{$lte:' num2str(q.dur2) '}}'];    
+    durDat = ['{maxDur:{$lte:' num2str(q.dur2) '}}'];    
 else
-    durDat = '';
+    durDat = [];
 end
 
 %{
 if isfield(q, 'lp1') && isfield(q, 'lp2')
-    lpDat = [',{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
+    lpDat = ['{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
 elseif isfield(q, 'lp1')
-    lpDat = [',{logProb:{$gte:' num2str(q.lp1) '}}'];
+    lpDat = ['{logProb:{$gte:' num2str(q.lp1) '}}'];
 elseif isfield(q, 'lp2')
-    lpDat = [',{logProb:{$lte:' num2str(q.lp2) '}}'];    
+    lpDat = ['{logProb:{$lte:' num2str(q.lp2) '}}'];    
 else
-    lpDat = '';
+    lpDat = [];
 end
 %}
 
 if isfield(q, 'loc') && isfield(q, 'rad')
-    locDat = [',{"location":{"$geoWithin":{"$centerSphere":[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad/earthRad) ']}}}'];
+    locDat = ['{"location":{"$geoWithin":{"$centerSphere":[[' num2str(q.loc(2)) ',' num2str(q.loc(1)) '], ' num2str(q.rad/earthRad) ']}}}'];
 else
-    locDat = '';
+    locDat = [];
 end
 
 if isfield(q, 'tag')
-    tagDat = [',{"$text": {"$search":"' q.tag '"}}'];
+    tagDat = ['{"$text": {"$search":"' q.tag '"}}'];
 else
-    tagDat = '';
+    tagDat = [];
 end
 
 %postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat tagDat ']}'];
-postDat = ['{"$and":[' timeDat locDat tagDat ']}'];
+strCellArr = {timeDat,locDat,freqDat,durDat,tagDat};
+strCellArr(cellfun('isempty',strCellArr)) = [];
+postDat = ['{"$and":[' strjoin(strCellArr,',') ']}'];
 
 tmp = urlread2(['http://' servAddr ':8956/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 15000);
 file = loadjson(tmp);
