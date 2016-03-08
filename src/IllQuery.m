@@ -83,7 +83,6 @@ else
     tagDat = [];
 end
 
-%postDat = ['{$and:[' timeDat freqDat durDat lpDat locDat tagDat ']}'];
 strCellArr = {timeDat,locDat,freqDat,durDat,tagDat};
 strCellArr(cellfun('isempty',strCellArr)) = [];
 postDat = ['{"$and":[' strjoin(strCellArr,',') ']}'];
