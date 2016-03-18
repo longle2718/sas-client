@@ -87,9 +87,9 @@ numTest = numTest + 1;
 fprintf(1, 'Test %d: download event', numTest);
 
 % Download event 
-event = IllColGet(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
+events = IllColGet(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
 
-if (iscell(event))
+if (iscell(events))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
