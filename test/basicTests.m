@@ -6,9 +6,11 @@
 
 clear all; close all
 
-addpath(genpath('../src'));
-addpath(genpath('../../jsonlab'));
-addpath(genpath('../../V1_1_urlread2'));
+rootDir = 'C:/Users/Long/Projects/';
+
+addpath([rootDir 'sas-clientLib/src/']);
+addpath([rootDir 'jsonlab']);
+addpath([rootDir 'V1_1_urlread2']);
 % Import cert into Matlab jvm truststore.
 % Default alias is mykey
 % Need write access to the truststore (cacerts)
@@ -60,7 +62,7 @@ aEvent.key = PWD;
 aEvent.a = 1;
 status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent);
 
-if (strfind(status,'doc inserted'))
+if (strfind(status,'inserted'))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else

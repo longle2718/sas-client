@@ -83,7 +83,13 @@ else
     tagDat = [];
 end
 
-strCellArr = {timeDat,locDat,freqDat,durDat,tagDat};
+if isfield(q, 'dev')
+    devDat = ['{"device":"' q.dev '"}'];
+else
+    devDat = [];
+end
+
+strCellArr = {timeDat,locDat,freqDat,durDat,tagDat,devDat};
 strCellArr(cellfun('isempty',strCellArr)) = [];
 postDat = ['{"$and":[' strjoin(strCellArr,',') ']}'];
 
