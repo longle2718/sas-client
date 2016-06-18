@@ -120,7 +120,7 @@ data = fread(fid,'*char');
 fclose(fid);
 resp = IllGridPost(servAddr, DB, USER, PWD, DATA, 'testPoint', data);
 
-if (strfind(resp,'file inserted'))
+if (strfind(resp,'inserted'))
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
