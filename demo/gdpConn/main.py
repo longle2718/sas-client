@@ -4,11 +4,19 @@ GDB connector from Illiad
 Long Le <longle1@illinois.edu>
 University of Illinois
 """
+import os
+dir = os.path.dirname(__file__)
 import sys
-sys.path.insert(0,sys.path[0]+'../../python/src/')
+sys.path.append(os.path.join(dir, '../../python/src/'))
+print(sys.path)
 from sasclient import *
+sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
+sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
+import KVstore
 from datetime import datetime, timedelta
 
+#======================
+# Get data from Illiad
 servAddr = 'acoustic.ifp.illinois.edu:8080'
 DB = 'publicDb'
 USER = 'nan'
@@ -30,4 +38,14 @@ if len(events) > 0:
 else:
 	print('No event found!')
 
+#======================
+# Put data (if any) into GDP
+logname = "gdp.illiad.log"
+kv = KVstore(logname, mode=KVstore.MODE_RW) # create a kvstore
+
+for idx in range(len(events)):
+	kv[idx] = events[idx]
+
+# verified log-writing
+assert len(kv) == len(events)
 
