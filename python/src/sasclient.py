@@ -1,3 +1,10 @@
+"""
+sasclient subroutines
+
+Author: Ian
+Updated by: Long Le <longle1@illinois.edu>
+University of Illinois
+"""
 import requests
 import numpy as np
 
@@ -5,7 +12,7 @@ def IllStatusGet(servAddr):
     r = requests.get('http://'+servAddr+'/',timeout=10)
     return r.text
 
-def IllModelGet(serviceAddr):
+def IllModelGet(servAddr):
     r = requests.get('http://'+servAddr+'/model',timeout=10)
     return r.json()
     

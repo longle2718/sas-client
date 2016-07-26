@@ -18,7 +18,6 @@ addpath([rootDir 'V1_1_urlread2']);
 %importcert('illiad.crt')
 
 servAddr = 'acoustic.ifp.illinois.edu';
-%servAddr = '192.168.8.105';
 DB = 'publicDb';
 USER = 'nan';
 PWD = 'publicPwd';
@@ -62,7 +61,7 @@ aEvent.key = PWD;
 aEvent.a = 1;
 status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent);
 
-if (strfind(status,'inserted'))
+if strfind(status,'inserted')
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -78,7 +77,7 @@ q.filename = 'testPoint';
 % server
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);
 
-if (iscell(events))
+if iscell(events)
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -91,7 +90,7 @@ fprintf(1, 'Test %d: download event', numTest);
 % Download event 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, events{1}.filename);
 
-if (iscell(events))
+if iscell(events)
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -101,11 +100,10 @@ end
 numTest = numTest + 1;
 fprintf(1, 'Test %d: update event', numTest);
 
-aEvent.a = 1;
 resp = IllColPut(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
 jsonResp = loadjson(resp);
 
-if (isfield(jsonResp,'ok'))
+if isfield(jsonResp,'ok')
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else
@@ -120,7 +118,7 @@ data = fread(fid,'*char');
 fclose(fid);
 resp = IllGridPost(servAddr, DB, USER, PWD, DATA, 'testPoint', data);
 
-if (strfind(resp,'inserted'))
+if strfind(resp,'inserted')
     fprintf(1, '... PASSED\n');
     numPass = numPass + 1;
 else

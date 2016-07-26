@@ -1,62 +1,143 @@
-wkDir = 'E:\\SAS\\Python\\'
-import os
-os.chdir(wkDir)
-import SAS
+"""
+Basic tests for sasclient
+
+Author: Ian 
+Updated by: Long Le <longle1@illinois.edu>
+University of Illinois
+"""
+import sys
+sys.path.insert(0,sys.path[0]+'../src/')
+from sasclient import *
 
 
-servAddr = 'acoustic.ifp.illinois.edu'
-# servAddr = '192.168.8.105'
+servAddr = 'acoustic.ifp.illinois.edu:8080'
 DB = 'publicDb'
 USER = 'nan'
 PWD = 'publicPwd'
 DATA = 'data'
 EVENT = 'event'
 
-# Check Status
+numTest = 0
+numPass = 0
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': check status',end='')
+
 status = IllStatusGet(servAddr)
-print('Test 1 check status')
-print(status)
-# Check Models
+if 'OK' in status:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': check models',end='')
+
 models = IllModelGet(servAddr)
-print('Test 2 check models')
-print(models)
-# Send event
+if type(models) is list:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+	
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': send event',end='')
+
 aEvent = {'filename': 'testPoint', 'key': PWD, 'a': 1}
 status = IllColPost(servAddr, DB, USER, PWD, EVENT, aEvent)
-print('Test 3 send event')
-print(status)
-# Query event
+if 'inserted' in status:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': query event',end='')
+
 q = {'filename': 'testPoint'}
 #q = {'filename': 'testPoint',
 #     'limit': 0,
 #     't1':datetime(2014,8,3,16,22,44),
 #     't2':datetime(2014,8,3,16,22,55)}
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);
-print('Test 4 query event')
-print(type(events))
-# Download event
+if type(events) is list:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': download event',end='')
+
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, events[0]['filename'])
-print('Test 5 download event')
-print(type(events))
-# Update event
-resp = IllColPut(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
-print('Test 6 update event')
-print(resp)
-# Send data
+if type(events) is list:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': update event',end='')
+
+jsonResp = IllColPut(servAddr, DB, USER, PWD, EVENT, 'testPoint', 'inc', '{"a":1}');
+if 'ok' in jsonResp:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': send data',end='')
+
 # [x, fs, nbBits] = audiolab.wavread('hello.wav')
-postDat  = open(wkDir+'hello.wav', "rb").read()
+with open('hello.wav', "rb") as f:
+	postDat = f.read()
 resp = IllGridPost(servAddr, DB, USER, PWD, DATA, 'testPoint', postDat)
-print('Test 7 download event')
-print(resp)
-# Download data
-getDat = IllGridGet(servAddr, DB, USER, PWD, DATA, 'testPoint')
-hello = wavread_char(getDat)
-print('Test 8 download data')
-# Delete event
+if 'inserted' in resp:
+	print("... PASSED\n")
+	numPass += 1
+else:
+	print("... FAILED\n")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': download data',end='')
+
+data = IllGridGet(servAddr, DB, USER, PWD, DATA, 'testPoint')
+if 'RIFF' == data[0:4].decode('utf-8'):
+	print("... PASSED")
+	numPass += 1
+else:
+	print("... FAILED")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': delete event',end='')
+
 resp = IllColDelete(servAddr, DB, USER, PWD, EVENT, 'testPoint')
-print('Test 9 delete event')
-print(resp)
-# Delete data
+if 'ok' in resp:
+	print("... PASSED")
+	numPass += 1
+else:
+	print("... FAILED")
+
+#==========================
+numTest += 1
+print('Test '+str(numTest)+': delete event',end='')
+
 resp = IllGridDelete(servAddr, DB, USER, PWD, DATA, 'testPoint')
-print('Test 7 delete data')
-print(resp)
+if 'file deleted' in resp:
+	print("... PASSED")
+	numPass += 1
+else:
+	print("... FAILED")
+
+#==========================
+print(str(numPass)+" passed out of "+str(numTest)+" tests")
