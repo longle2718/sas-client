@@ -2,16 +2,16 @@ import requests
 import numpy as np
 
 def IllStatusGet(servAddr):
-    r = requests.get('http://'+servAddr+':8956',timeout=10)
+    r = requests.get('http://'+servAddr+'/',timeout=10)
     return r.text
 
 def IllModelGet(serviceAddr):
-    r = requests.get('http://'+servAddr+':8956/model',timeout=10)
+    r = requests.get('http://'+servAddr+'/model',timeout=10)
     return r.json()
     
 def IllColPost(servAddr, db, user, pwd, col, aEvent):
     payload = {'dbname': db, 'colname': col, 'user': user, 'passwd': pwd}
-    r = requests.post('http://'+servAddr+':8956/col',params=payload, json=aEvent,timeout=10)
+    r = requests.post('http://'+servAddr+'/col',params=payload, json=aEvent,timeout=10)
     return r.text
 
 def IllQuery(servAddr,db, user, pwd, col, q):    
@@ -75,12 +75,12 @@ def IllQuery(servAddr,db, user, pwd, col, q):
     postDat = ","
     postDat = postDat.join(seq)
     postDat = '{"$and":[' + postDat + ']}'
-    r = requests.post('http://'+servAddr+':8956/query',params=payload,data = postDat, timeout=15)
+    r = requests.post('http://'+servAddr+'/query',params=payload,data = postDat, timeout=15)
     return r.json()
 
 def IllColGet(servAddr,db, user, pwd, col, filename):
     payload = {'dbname': db, 'colname': col, 'user': user, 'passwd': pwd, 'filename': filename}
-    r = requests.get('http://'+servAddr+':8956/col', params=payload, timeout=10)
+    r = requests.get('http://'+servAddr+'/col', params=payload, timeout=10)
     return r.json()
     
 def IllColPut(servAddr,db, user, pwd, col, filename, op, field):
@@ -94,27 +94,27 @@ def IllColPut(servAddr,db, user, pwd, col, filename, op, field):
     putDat = {'filename':filename, op:field}
     # putDat = '{"filename":"' + filename + '"}'+\n+'{"$' + op + '":' + field + '}'
     putDat = '{{"filename":"{0}"}}\n{{"{1}":{2}}}'.format(filename,op,field)
-    r = requests.put('http://'+servAddr+':8956/col', params=payload, data = putDat, timeout=15)
+    r = requests.put('http://'+servAddr+'/col', params=payload, data = putDat, timeout=15)
     return r.json()
 
 def IllGridPost(servAddr, db, user, pwd, gridCol, filename, data):
     payload = {'dbname': db, 'colname': gridCol, 'user': user, 'passwd': pwd, 'filename': filename}
-    r = requests.post('http://'+servAddr+':8956/gridfs',params=payload,data = data, timeout=15)
+    r = requests.post('http://'+servAddr+'/gridfs',params=payload,data = data, timeout=15)
     return r.text
 
 def IllGridGet(servAddr, db, user, pwd, gridCol, filename):
     payload = {'dbname': db, 'colname': gridCol, 'user': user, 'passwd': pwd, 'filename': filename}
-    r = requests.get('http://'+servAddr+':8956/gridfs',params=payload, timeout=15)
+    r = requests.get('http://'+servAddr+'/gridfs',params=payload, timeout=15)
     return r.content
 
 def IllColDelete(servAddr, db, user, pwd, col, filename):
     payload = {'dbname': db, 'colname': col, 'user': user, 'passwd': pwd, 'filename': filename}
-    r = requests.delete('http://'+servAddr+':8956/col',params=payload, timeout=15)
+    r = requests.delete('http://'+servAddr+'/col',params=payload, timeout=15)
     return r.text
 
 def IllGridDelete(servAddr, db, user, pwd, gridCol, filename):
     payload = {'dbname': db, 'colname': gridCol, 'user': user, 'passwd': pwd, 'filename': filename}
-    r = requests.delete('http://'+servAddr+':8956/gridfs',params=payload, timeout=15)
+    r = requests.delete('http://'+servAddr+'/gridfs',params=payload, timeout=15)
     return r.text
 
 def wavread_char(x):

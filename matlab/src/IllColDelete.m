@@ -8,4 +8,4 @@ function resp = IllColDelete(servAddr, db, user, pwd, col, filename)
 
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd, 'filename', filename};
 queryString = http_paramsToString(params);
-resp = urlread2(['http://' servAddr ':8956/col?' queryString], 'DELETE', [], [], 'READ_TIMEOUT', 15000);
+resp = urlread2(['http://' servAddr '/col?' queryString], 'DELETE', [], [], 'READ_TIMEOUT', 15000);
