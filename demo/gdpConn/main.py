@@ -14,6 +14,7 @@ import gdp
 #sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
 #from KVstore import KVstore
 from datetime import datetime, timedelta
+import json
 
 #======================
 # Get data from Illiad
@@ -41,8 +42,14 @@ else:
 #======================
 # Put data (if any) into GDP
 gdp.gdp_init()
-gcl_name = gdp.GDP_NAME('edu.illinois.ifp.longle1')
+# create a GDP_NAME object from a human readable python string
+#gcl_name = gdp.GDP_NAME('edu.illinois.ifp.longle1.log0')
+gcl_name = gdp.GDP_NAME('edu.illinois.ifp.acoustic.log0')
+# assume that this log already exists.
 gcl_handle = gdp.GDP_GCL(gcl_name,gdp.GDP_MODE_RA)
-for idx in xrange(10):
-	datum = {"data": "Hello world " + str(idx)}
-	gcl_handle.append(datum)
+for event in events:
+	print(event['recordDate'])
+	gcl_handle.append({'data':json.dumps(event)})
+# verify if write successful
+datum = gcl_handle.read(-1)
+print('The most recent record number is '+ str(datum['recno']))
