@@ -8,11 +8,10 @@ import os
 dir = os.path.dirname(__file__)
 import sys
 sys.path.append(os.path.join(dir, '../../python/src/'))
-print(sys.path)
 from sasclient import *
+#sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
 sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
-sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
-import KVstore
+from KVstore import KVstore
 from datetime import datetime, timedelta
 
 #======================
