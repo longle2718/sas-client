@@ -9,9 +9,10 @@ dir = os.path.dirname(__file__)
 import sys
 sys.path.append(os.path.join(dir, '../../python/src/'))
 from sasclient import *
-#sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
-sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
-from KVstore import KVstore
+sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
+import gdp
+#sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
+#from KVstore import KVstore
 from datetime import datetime, timedelta
 
 #======================
@@ -39,12 +40,9 @@ else:
 
 #======================
 # Put data (if any) into GDP
-logname = "gdp.illiad.log"
-kv = KVstore(logname, mode=KVstore.MODE_RW) # create a kvstore
-
-for idx in range(len(events)):
-	kv[idx] = events[idx]
-
-# verified log-writing
-assert len(kv) == len(events)
-
+gdp.gdp_init()
+gcl_name = gdp.GDP_NAME('edu.illinois.ifp.longle1')
+gcl_handle = gdp.GDP_GCL(gcl_name,gdp.GDP_MODE_RA)
+for idx in xrange(10):
+	datum = {"data": "Hello world " + str(idx)}
+	gcl_handle.append(datum)
