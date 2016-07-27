@@ -14,7 +14,7 @@ import gdp
 #sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
 #from KVstore import KVstore
 from datetime import datetime, timedelta
-import json
+import jsoni, pickle
 
 #======================
 # Get data from Illiad
@@ -39,6 +39,12 @@ if len(events) > 0:
 	#print(events[0])
 else:
 	print('No event found!')
+
+#======================
+# append data to a local pickle file
+for event in events:
+	with open('audio_event.pkl','ab') as f:
+		pickle.dump(event,f)
 
 #======================
 # Put data (if any) into GDP
