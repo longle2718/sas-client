@@ -27,7 +27,8 @@ EVENT = 'event'
 
 currTime = datetime.utcnow()
 t2 = currTime;
-t1 = currTime - timedelta(minutes=120)
+# push data in the last few mins if any
+t1 = currTime - timedelta(minutes=15)
 print(t1)
 print(t2)
 
