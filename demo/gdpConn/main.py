@@ -43,7 +43,7 @@ else:
 #======================
 # append data to a local pickle file
 for event in events:
-	with open('audio_event.pkl','ab') as f:
+	with open('audio_events.pkl','ab') as f:
 		pickle.dump(event,f)
 
 #======================
