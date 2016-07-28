@@ -109,6 +109,7 @@ else:
 numTest += 1
 print('Test '+str(numTest)+': download data',end='')
 
+# bytes
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, 'testPoint')
 if 'RIFF' == data[0:4].decode('utf-8'):
 	print("... PASSED")

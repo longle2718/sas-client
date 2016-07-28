@@ -24,6 +24,7 @@ q = {'t1':datetime(2016,7,20,00,00,00),\
      't2':datetime(2016,8,3,00,00,00)}
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);
 print("Number of events found is "+str(len(events)))
+# bytes
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, events[0]['filename'])
 with open('audio.wav', 'wb') as f:
 	f.write(data)
