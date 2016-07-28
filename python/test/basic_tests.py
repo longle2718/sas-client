@@ -9,7 +9,6 @@ import sys
 sys.path.insert(0,sys.path[0]+'../src/')
 from sasclient import *
 
-
 servAddr = 'acoustic.ifp.illinois.edu:8080'
 DB = 'publicDb'
 USER = 'nan'
