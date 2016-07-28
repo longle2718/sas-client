@@ -14,7 +14,7 @@ import gdp
 #sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
 #from KVstore import KVstore
 from datetime import datetime, timedelta
-import jsoni, pickle
+import json, pickle
 
 #======================
 # Get data from Illiad
