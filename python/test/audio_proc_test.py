@@ -4,6 +4,8 @@ Try processing audio from Illiad in python
 Long Le <longle1@illinois.edu>
 University of Illinois
 '''
+print(__doc__)
+
 import numpy as np
 from scipy.io import wavfile
 from scipy import signal
