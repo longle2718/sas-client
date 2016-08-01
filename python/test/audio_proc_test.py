@@ -11,7 +11,8 @@ from scipy.io import wavfile
 from scipy import signal
 import matplotlib.pyplot as plt
 import sys
-sys.path.insert(0,sys.path[0]+'../src/')
+sys.path.insert(0,sys.path[0]+'/../src/')
+#print(sys.path)
 from sasclient import *
 from datetime import datetime
 
@@ -33,15 +34,15 @@ with open('audio.wav', 'wb') as f:
 
 fs,data = wavfile.read('audio.wav')
 T = np.arange(len(data))/fs
-f,t,Sxx = signal.spectrogram(data,fs)
+f,t,Sxx = signal.spectrogram(data,fs,window='hann',nperseg=512,noverlap=256)
 
 fig = plt.figure()
-ax1 = fig.add_subplot(211)
-ax1.pcolormesh(t,f,Sxx)
-ax1.set_ylabel('Frequency (Hz)')
-ax1.set_xlabel('Time (sec)')
-ax2 = fig.add_subplot(212)
-ax2.plot(T,data)
-ax2.set_ylabel('Amplitude')
-ax2.set_xlabel('Time (sec)')
+fig.add_subplot(211)
+plt.pcolormesh(t,f,Sxx)
+plt.ylabel('Frequency (Hz)')
+plt.xlabel('Time (sec)')
+fig.add_subplot(212)
+plt.plot(T,data)
+plt.ylabel('Amplitude')
+plt.xlabel('Time (sec)')
 plt.show()
