@@ -62,7 +62,7 @@ def IllQuery(servAddr,db, user, pwd, col, q):
         durDat = ''
     # Location and Radius
     if ('loc' in q) and ('rad' in q):
-        locDat = '{"location":{"$geoWithin":{"$centerSphere":[[' + str(q['loc'][0]) + ',' + str(q['loc'][1]) + '], ' + str(q['rad']/earthRad) +  ']}}}'
+        locDat = '{"location":{"$geoWithin":{"$centerSphere":[[' + str(q['loc'][1]) + ',' + str(q['loc'][0]) + '], ' + str(q['rad']/earthRad) +  ']}}}'
     else:
         locDat = '';
     #Tag
