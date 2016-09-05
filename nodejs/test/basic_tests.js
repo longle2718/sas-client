@@ -64,7 +64,7 @@ Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 	console.log(numPass+" passed out of "+numTest+" tests")
 }, function(){
 	console.log("... FAILED\n")
-})
+});
 
 //==========================
 numTest += 1
@@ -83,4 +83,4 @@ Ill.GridGet(servAddr,DB,USER,PWD,DATA,fname,function(data){
 	console.log(numPass+" passed out of "+numTest+" tests")
 },function(){
 	console.log("... FAILED\n")
-})
+});
