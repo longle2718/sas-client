@@ -12,18 +12,15 @@ The client component (highlighted in the figure below) in the overall SAS. The c
 
 * [urlread2](http://www.mathworks.com/matlabcentral/fileexchange/35693-urlread2)
 
-## Examples using the service
-
-Video: A voice-controlled smart light using the service.
-[![ScreenShot] (https://github.com/long0612/IlliadAccess/blob/master/demo.png)](http://vimeo.com/104966491).
-
 ## Directory structure
 
 demo/ -- some demos
 
-src/ -- source code
+bash/ -- Bash source and test
 
-test/ -- some tests to verify working code
+matlab/ -- MatLab source and test
+
+python/ -- Python source and test
 
 ## License
 The MIT License

@@ -14,4 +14,4 @@ function resp = IllColPut(servAddr, db, user, pwd, col, filename, op, field)
 params = {'dbname', db, 'colname', col, 'user', user, 'passwd', pwd};
 queryString = http_paramsToString(params);
 data = sprintf('{"filename":"%s"}\n{"$%s":%s}', filename, op, field);
-resp = urlread2(['http://' servAddr ':8956/col?' queryString], 'PUT', data, [], 'READ_TIMEOUT', 15000);
+resp = urlread2(['http://' servAddr '/col?' queryString], 'PUT', data, [], 'READ_TIMEOUT', 15000);

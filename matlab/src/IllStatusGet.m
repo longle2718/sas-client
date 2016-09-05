@@ -5,4 +5,4 @@
 % University of Illinois
 %
 function status = IllStatusGet(serviceAddr)
-status = urlread2(['http://' serviceAddr ':8956/'], 'GET', [], [], 'READ_TIMEOUT', 10000);
+status = urlread2(['http://' serviceAddr '/'], 'GET', [], [], 'READ_TIMEOUT', 10000);

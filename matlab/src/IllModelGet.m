@@ -5,5 +5,5 @@
 % University of Illinois
 %
 function models = IllModelGet(serviceAddr)
-tmp = urlread2(['http://' serviceAddr ':8956/model'], 'GET', [], [], 'READ_TIMEOUT', 10000);
+tmp = urlread2(['http://' serviceAddr '/model'], 'GET', [], [], 'READ_TIMEOUT', 10000);
 models = loadjson(tmp);

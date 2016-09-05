@@ -11,4 +11,4 @@ function rawdat = IllGridGet(servAddr, db, user, pwd, gridCol, filename)
 
 params = {'dbname', db, 'colname', gridCol, 'user', user, 'passwd', pwd, 'filename', filename};
 queryString = http_paramsToString(params);
-rawdat = urlread2(['http://' servAddr ':8956/gridfs?' queryString], 'GET', [], [], 'READ_TIMEOUT', 15000);
+rawdat = urlread2(['http://' servAddr '/gridfs?' queryString], 'GET', [], [], 'READ_TIMEOUT', 15000);
