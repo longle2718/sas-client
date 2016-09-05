@@ -4,7 +4,7 @@ This is the source code of the swarm acoustic service ([SAS](http://acoustic.ifp
 
 ## Overview
 The client component (highlighted in the figure below) in the overall SAS. The client library is useful for developing applications using the SAS.
-![alt tag](https://github.com/long0612/sas-clientLib/fig3.png)
+![alt tag](https://github.com/long0612/sas-clientLib/blob/master/fig3.png)
 
 ## Dependencies
 
