@@ -27,7 +27,7 @@ def IllQuery(servAddr,db, user, pwd, col, q):
 # .t2 - ending time. Ex: datetime(2014,8,3,16,22,55)
 # .loc - location array of lat and lng: loc(1) - lat, loc(2) - lng
 # .rad - radius around the location, in miles
-    earthRad = 3959; #miles
+    earthRad = 3959 #miles
     # Construct the query string
     payload = {'dbname': db, 'colname': col, 'user': user, 'passwd': pwd};
     if 'limit' in q:
