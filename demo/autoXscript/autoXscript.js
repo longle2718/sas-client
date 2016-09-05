@@ -36,7 +36,7 @@ var DATA = 'data';
 var EVENT = 'event';
 
 var xscript = function(data,cb_done,cb_fail){
-	console.log('google ASR');
+	//console.log('google ASR');
 	var options = {
 		hostname: 'www.google.com',
 		path: '/speech-api/v2/recognize?key=AIzaSyD5NvcrQ54Rbzdxpo3FtJsAyvUjy6O3cn4&output=json&lang=en-us',
