@@ -27,6 +27,8 @@
 
 var Ill = require('../../nodejs/src/sasclient_node')
 var http = require('http')
+var async = require('async')
+//var fs = require('fs');
 
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
@@ -95,24 +97,36 @@ var xscript = function(data,cb_done,cb_fail){
 }
 
 var q = {};
-q.t1 = '2016-09-04T21:50:21.002Z'
-q.t2 = '2016-09-05T21:50:21.002Z'
+q.t1 = '2016-09-05T22:35:25.443Z'
+q.t2 = '2016-09-05T22:45:25.443Z'
 Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
-	console.log('# of events = '+events.length)
+	console.log('# of events = '+events.length);
 
-	events.forEach(function(aEvent){
+	async.eachSeries(events,function(aEvent,cb){
 		Ill.GridGet(servAddr,DB,USER,PWD,DATA,aEvent.filename,function(data){
+			/*
+			var wstream = fs.createWriteStream(aEvent.filename);
+			wstream.write(data);
+			wstream.end();
+			*/
+
 			xscript(data,function(str){
-				console.log(str);
+				console.log(aEvent.filename+' => '+str);
 			},function(){
-				console.log('no transcription for '+aEvent.filename);
+				console.log(aEvent.filename+' => unable to transcribe');
 			});
+			cb();
 		},function(){
-			console.log("Ill.GridGet failed")
+			console.log("Ill.GridGet failed");
+			cb();
 		});
+	},function(err){
+		if (err)
+			console.log(err.message);
+		//console.log('async finished');
 	});
 	
 }, function(){
-	console.log("Ill.Query failed")
+	console.log("Ill.Query failed");
 })
 

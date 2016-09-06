@@ -70,7 +70,7 @@ Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 numTest += 1
 console.log('Test '+numTest+': download data')
 
-var fname = '17100105-8896-431b-bfcd-94003abed614.wav';
+var fname = 'eaeac18e-059d-446f-92b9-41cb76f7fe24.wav';
 Ill.GridGet(servAddr,DB,USER,PWD,DATA,fname,function(data){
 	console.log('data.length = '+data.length);
 
