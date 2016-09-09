@@ -28,7 +28,7 @@
 var Ill = require('../../nodejs/src/sasclient_node')
 var http = require('http')
 var async = require('async')
-//var fs = require('fs');
+var fs = require('fs');
 
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
@@ -110,12 +110,10 @@ Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 	async.eachSeries(events,function(aEvent,cb){
 		// read raw audio data associated with each audio event
 		Ill.GridGet(servAddr,DB,USER,PWD,DATA,aEvent.filename,function(data){
-			/*
 			// write the data locally for verification
 			var wstream = fs.createWriteStream(aEvent.filename);
 			wstream.write(data);
 			wstream.end();
-			*/
 
 			// xscribe the raw audio data of an event
 			xscript(data,function(str){
