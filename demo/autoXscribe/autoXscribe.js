@@ -37,8 +37,10 @@ var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
 
+//Using google service for autoxscribe.
 var xscript = function(data,cb_done,cb_fail){
 	//console.log('google ASR');
+	// prepare params for http requests
 	var options = {
 		hostname: 'www.google.com',
 		path: '/speech-api/v2/recognize?key=AIzaSyD5NvcrQ54Rbzdxpo3FtJsAyvUjy6O3cn4&output=json&lang=en-us',
@@ -60,6 +62,7 @@ var xscript = function(data,cb_done,cb_fail){
 
 		google_res.on('end', function(){
 			//console.log('google responses: '+chunks);
+			// navigating through the nasty json return by google
 			var rawResStr = chunks.split('\n');// only the second chunk contains valid responses.
 			if (! rawResStr[1])
 				cb_fail();
@@ -96,20 +99,25 @@ var xscript = function(data,cb_done,cb_fail){
 	req.end();
 }
 
+// hardcoded query for now that only use time range
 var q = {};
-q.t1 = '2016-09-05T22:35:25.443Z'
-q.t2 = '2016-09-05T22:45:25.443Z'
+q.t1 = '2016-09-05T22:35:25.443Z';
+q.t2 = '2016-09-05T22:45:25.443Z';
+// Query the Illiad service for audio events that matches the query q
 Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 	console.log('# of events = '+events.length);
 
 	async.eachSeries(events,function(aEvent,cb){
+		// read raw audio data associated with each audio event
 		Ill.GridGet(servAddr,DB,USER,PWD,DATA,aEvent.filename,function(data){
 			/*
+			// write the data locally for verification
 			var wstream = fs.createWriteStream(aEvent.filename);
 			wstream.write(data);
 			wstream.end();
 			*/
 
+			// xscribe the raw audio data of an event
 			xscript(data,function(str){
 				console.log(aEvent.filename+' => '+str);
 			},function(){
