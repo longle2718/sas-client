@@ -71,8 +71,8 @@ def IllQuery(servAddr,db, user, pwd, col, q):
     else:
         tagDat = ''
     #Device
-    if ('dev' in q):
-        devDat = '{"device":"' + q['dev'] + '"}'
+    if ('device' in q):
+        devDat = '{"device":"' + q['device'] + '"}'
     else:
         devDat = ''
     
