@@ -92,6 +92,7 @@ var formReq = function(db, user, pwd, col, q){
     }
     */
     
+	// location and radius
 	var locDat;
     if (q.hasOwnProperty('loc') && q.hasOwnProperty('rad')){
         locDat = '{"location":{"$geoWithin":{"$centerSphere":[['+q.loc[1]+','+q.loc[0]+'], '+q.rad/3959+']}}}'; // earthRad = 3959 miles
@@ -100,6 +101,7 @@ var formReq = function(db, user, pwd, col, q){
     }
     strArr = strArr.concat(locDat);
     
+	// tag
 	var tagDat;
     if (q.hasOwnProperty('tag')){
         tagDat = '{"$text": {"$search":"'+q.tag+'"}}';
@@ -107,6 +109,14 @@ var formReq = function(db, user, pwd, col, q){
         tagDat = [];
     }
     strArr = strArr.concat(tagDat);
+
+	var devDat;
+	if (q.hasOwnProperty('device')){
+		devDat = '{"device":"'+q.device+'"}';
+	}else{
+		devDat = [];
+	}
+    strArr = strArr.concat(devDat);
 
 	var filenameDat;
     if (q.hasOwnProperty('filename')){

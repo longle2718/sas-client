@@ -101,38 +101,54 @@ var xscript = function(data,cb_done,cb_fail){
 
 // hardcoded query for now that only use time range
 var q = {};
-q.t1 = '2016-09-05T22:35:25.443Z';
-q.t2 = '2016-09-05T22:45:25.443Z';
-// Query the Illiad service for audio events that matches the query q
-Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
-	console.log('# of events = '+events.length);
+//q.t1 = '2016-09-05T22:35:25.443Z';
+//q.t2 = '2016-09-05T22:45:25.443Z';
+q.t2 = new Date()
+q.t1 = new Date()
 
-	async.eachSeries(events,function(aEvent,cb){
-		// read raw audio data associated with each audio event
-		Ill.GridGet(servAddr,DB,USER,PWD,DATA,aEvent.filename,function(data){
-			// write the data locally for verification
-			var wstream = fs.createWriteStream(aEvent.filename);
-			wstream.write(data);
-			wstream.end();
+var queryXscribe = function(){
+    q.t2.setTime(Date.now())
+    q.t1.setTime(q.t2.getTime()-10000)
+    console.log('From '+q.t1+' to '+q.t2)
 
-			// xscribe the raw audio data of an event
-			xscript(data,function(str){
-				console.log(aEvent.filename+' => '+str);
-			},function(){
-				console.log(aEvent.filename+' => unable to transcribe');
-			});
-			cb();
-		},function(){
-			console.log("Ill.GridGet failed");
-			cb();
-		});
-	},function(err){
-		if (err)
-			console.log(err.message);
-		//console.log('async finished');
-	});
-	
-}, function(){
-	console.log("Ill.Query failed");
-})
+    // Query the Illiad service for audio events that matches the query q
+    Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
+        console.log('# of events = '+events.length);
+
+        async.eachSeries(events,function(aEvent,cb){
+            // read raw audio data associated with each audio event
+            Ill.GridGet(servAddr,DB,USER,PWD,DATA,aEvent.filename,function(data){
+                // write the data locally for verification
+                /*
+                var wstream = fs.createWriteStream(aEvent.filename);
+                wstream.write(data);
+                wstream.end();
+                */
+
+                // xscribe the raw audio data of an event
+                xscript(data,function(str){
+                    console.log(aEvent.filename+' => '+str);
+                },function(){
+                    console.log(aEvent.filename+' => unable to transcribe');
+                });
+                cb();
+            },function(){
+                console.log("Ill.GridGet failed");
+                cb();
+            });
+        },function(err){
+            if (err)
+                console.log(err.message);
+            //console.log('async finished');
+        });
+        
+    }, function(){
+        console.log("Ill.Query failed");
+    })
+}
+
+var streamTimerId
+
+clearInterval(streamTimerId);
+streamTimerId = setInterval(queryXscribe,10000)
 
