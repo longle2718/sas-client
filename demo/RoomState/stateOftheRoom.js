@@ -9,6 +9,7 @@ var USER = 'nan';
 var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
+var amqp = require('amqplib/callback_api');
 
 
 var q = {};
@@ -24,7 +25,7 @@ var customSort= function(e1,e2){
 }
 var t=new Date();
 var intensity =0;
-setInterval(function (){
+var queryClassify= function (ex,ch){
 	t+=1000;
 	console.log('running ...'+ t +'\n');
 
@@ -46,16 +47,22 @@ setInterval(function (){
     pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
-    console.log(JSON.stringify(decision(9000))+'\n');
+	msg = JSON.stringify(decision(9000))
+    console.log(msg);
     console.log('total intensity:'+intensity+'\n');
     console.log('---------------------------------------------------------------');
-	
+
 	intensity=0;
 	pauseTime=0 ; // reset paustime after done
+	
+	// Rabbitmq messaging
+    ch.assertExchange(ex, 'fanout', {durable: false});
+    ch.publish(ex, '', new Buffer(msg));
+    console.log(" [x] Sent %s", msg);
     }, function(){
 	console.log("Ill.Query failed");
-})
-},1000);
+	})
+}
 // Query the Illiad service for audio events that matches the query q
 
 function decision(pauseTime){
@@ -84,3 +91,18 @@ function intensityCal(event){// use for continous block of 30s only
 
 
 }
+
+amqp.connect('amqp://localhost', function(err, conn) {
+  conn.createChannel(function(err, ch) {
+    var ex = 'roomStateProb';
+	// print out all the strings after the command or Hello world if empty
+    //var msg = process.argv.slice(2).join(' ') || 'Hello World!';
+	// the first argument must be a no-argument callback function, otherwise exception
+	setInterval(function(){
+		queryClassify(ex,ch);
+	},1000)
+
+  });
+
+  //setTimeout(function() { conn.close(); process.exit(0) }, 500);
+});
