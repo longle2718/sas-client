@@ -29,8 +29,8 @@ setInterval(function (){
 	console.log('running ...'+ t +'\n');
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
-	console.log('# of events = '+events.length);
-	//console.log(events[1]);
+	//console.log('# of events = '+events.length);
+	//console.log('['+events[0] +','+events[1]+'\n');
 	events.sort(customSort);
     _.each(events,function(e,ind){
     	console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
