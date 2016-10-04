@@ -13,13 +13,9 @@ var amqp = require('amqplib/callback_api');
 
 
 var q = {};
- q.t1 = '2016-09-05T22:35:25.443Z';
- q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
-var currentTime= new Date(q.t2);//new Date();
+//q.t1 = '2016-09-05T22:35:25.443Z';
+//q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
 var pauseTime=0;
-var startTime = new Date(q.t2).getTime() - 20*1000// in production currentTIme should be used
- q.t1= new Date(startTime).toISOString();
- console.log(q.t1);
 var customSort= function(e1,e2){
 	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
 }
@@ -27,14 +23,18 @@ var t=new Date();
 var intensity =0;
 var queryClassify= function (ex,ch){
 	t+=1000;
-	console.log('running ...'+ t +'\n');
+	//console.log('running ...'+ t +'\n');
+	var currentTime= new Date();//new Date();
+	var startTime = currentTime.getTime() - 30*1000// in production currentTIme should be used
+	q.t1= new Date(startTime).toISOString();
+	q.t2 = currentTime.toISOString();
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
-	//console.log('# of events = '+events.length);
+	console.log('# of events = '+events.length);
 	//console.log('['+events[0] +','+events[1]+'\n');
 	events.sort(customSort);
     _.each(events,function(e,ind){
-    	console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
+    	//console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
     	temp = new Date(e.recordDate).getTime();
     	pauseTime+= temp - parseFloat(e.maxDur)*1000- startTime; //note maxDur in second
     	if (pauseTime<0){ // it mean the begin of the block there is a speech
@@ -44,12 +44,12 @@ var queryClassify= function (ex,ch){
     	//console.log('pauseTime at'+ind+':'+pauseTime)
     	intensity+=intensityCal(e);
     });
-    pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
+    //pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
-	msg = JSON.stringify(decision(9000))
+	msg = JSON.stringify(decision(pauseTime))
     console.log(msg);
-    console.log('total intensity:'+intensity+'\n');
+    //console.log('total intensity:'+intensity+'\n');
     console.log('---------------------------------------------------------------');
 
 	intensity=0;
