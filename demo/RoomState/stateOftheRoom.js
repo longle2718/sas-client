@@ -15,7 +15,7 @@ var amqp = require('amqplib/callback_api');
 var q = {};
 //q.t1 = '2016-09-05T22:35:25.443Z';
 //q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
-var pauseTime=0;
+
 var customSort= function(e1,e2){
 	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
 }
@@ -32,10 +32,10 @@ var queryClassify= function (ex,ch){
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 	console.log('# of events = '+events.length);
 	//console.log('['+events[0] +','+events[1]+'\n');
-	events.sort(customSort);
-    _.each(events,function(e,ind){
+	//events.sort(customSort);
+    /*_.each(events,function(e,ind){
     	//console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
-    	temp = new Date(e.recordDate).getTime();
+    	//temp = new Date(e.recordDate).getTime();
     	pauseTime+= temp - parseFloat(e.maxDur)*1000- startTime; //note maxDur in second
     	if (pauseTime<0){ // it mean the begin of the block there is a speech
     		pauseTime =0
@@ -43,7 +43,13 @@ var queryClassify= function (ex,ch){
     	startTime = temp;
     	//console.log('pauseTime at'+ind+':'+pauseTime)
     	intensity+=intensityCal(e);
-    });
+    });*/
+    var pauseTime=0;
+    var totalDuration =0;
+    for (var i = 0; i < events.length; i++) {
+    	totalDuration+=parseFloat(events[i].maxDur);
+    };
+    pausTime=30000-totalDuration
     //pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
