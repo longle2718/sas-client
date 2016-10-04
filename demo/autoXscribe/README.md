@@ -1,11 +1,11 @@
 # Auto trascribe demo
 
-# Dependencies
-## RabbitMQ
+## Dependencies
+* RabbitMQ
 ```bash
 sudo apt-get install rabbitmq-server
 ```
-## amqp
+* amqp
 ```bash
 npm install amqplib
 ```
