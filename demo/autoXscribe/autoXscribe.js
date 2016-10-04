@@ -29,6 +29,7 @@ var Ill = require('../../nodejs/src/sasclient_node')
 var http = require('http')
 var async = require('async')
 var fs = require('fs');
+var amqp = require('amqplib/callback_api');
 
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
@@ -36,6 +37,15 @@ var USER = 'nan';
 var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
+
+var q = {};
+// hardcoded query for now that only use time range
+//q.t1 = '2016-09-05T22:35:25.443Z';
+//q.t2 = '2016-09-05T22:45:25.443Z';
+q.t2 = new Date();
+q.t1 = new Date();
+var streamTimerId;
+var isOn = false;
 
 //Using google service for autoxscribe.
 var xscript = function(data,cb_done,cb_fail){
@@ -99,13 +109,7 @@ var xscript = function(data,cb_done,cb_fail){
 	req.end();
 }
 
-// hardcoded query for now that only use time range
-var q = {};
-//q.t1 = '2016-09-05T22:35:25.443Z';
-//q.t2 = '2016-09-05T22:45:25.443Z';
-q.t2 = new Date()
-q.t1 = new Date()
-
+// query and transcribe audio
 var queryXscribe = function(){
     q.t2.setTime(Date.now())
     q.t1.setTime(q.t2.getTime()-10000)
@@ -147,8 +151,44 @@ var queryXscribe = function(){
     })
 }
 
-var streamTimerId
+// control logic for turning on/off the transcription based on the message queue
+amqp.connect('amqp://localhost',function(err,conn){
+	conn.createChannel(function(err,ch){
+		var ex = 'roomStateProb'; // the name of the exchange abstraction from rabbitmq
+		ch.assertExchange(ex, 'fanout', {durable: false});
+		ch.assertQueue('',{exclusive: true},function(err,q){
+			//console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
+			ch.bindQueue(q.queue, ex, '');
+			ch.consume(q.queue, function(msg) {
+				// handle rabbitmq message here
+				roomStateProbStr = msg.content.toString();
+				//console.log(roomStateProbStr);
+				try{
+					roomStateProb = JSON.parse(roomStateProbStr);
+					probOn =  roomStateProb.p_presenting+roomStateProb.p_QA;
+					console.log("Probability: "+probOn);
+				} catch(exc){
+					console.log(exc);
+					return;
+				}
 
-clearInterval(streamTimerId);
-streamTimerId = setInterval(queryXscribe,10000)
+				if (probOn > 0.7){
+					if (!isOn){
+						clearInterval(streamTimerId);
+						streamTimerId = setInterval(queryXscribe,10000)
+						isOn = true;
+						console.log('autoXscribe: ON')
+					}
+				}else{
+					if (isOn){
+						clearInterval(streamTimerId);
+						isOn = false;
+						console.log('autoXscribe: OFF')
+					}
+				}
+				
+			},{noAck: true});
+		});
+	})
+})
 
