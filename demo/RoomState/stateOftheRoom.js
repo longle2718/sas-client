@@ -23,13 +23,14 @@ var customSort= function(e1,e2){
 	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
 }
 var t=new Date();
+var intensity =0;
 setInterval(function (){
 	t+=1000;
 	console.log('running ...'+ t +'\n');
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
-	console.log('# of events = '+events.length);
-	//console.log(events[1]);
+	//console.log('# of events = '+events.length);
+	//console.log('['+events[0] +','+events[1]+'\n');
 	events.sort(customSort);
     _.each(events,function(e,ind){
     	console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
@@ -39,14 +40,17 @@ setInterval(function (){
     		pauseTime =0
     	} 
     	startTime = temp;
-    	console.log('pauseTime at'+ind+':'+pauseTime)
+    	//console.log('pauseTime at'+ind+':'+pauseTime)
+    	intensity+=intensityCal(e);
     });
     pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
-    console.log(JSON.stringify(Decision(9000))+'\n');
+    console.log(JSON.stringify(decision(9000))+'\n');
+    console.log('total intensity:'+intensity+'\n');
     console.log('---------------------------------------------------------------');
 	
+	intensity=0;
 	pauseTime=0 ; // reset paustime after done
     }, function(){
 	console.log("Ill.Query failed");
@@ -54,7 +58,7 @@ setInterval(function (){
 },1000);
 // Query the Illiad service for audio events that matches the query q
 
-function Decision(pauseTime){
+function decision(pauseTime){
 	var  x=pauseTime/1000; //convert to second
 	var z1= Math.exp(-(x-8)*(x-8)/18);
 	var z2= Math.exp(-(x-12)*(x-12)/18);
@@ -64,5 +68,19 @@ function Decision(pauseTime){
 	var p2 = z2/normalizedFactor;
 	var p3 = z3/normalizedFactor;
 
-	return {'p_speech':p1,'p_QA':p2,'p_break':p3}
+	return {'p_presenting':p1,'p_QA':p2,'p_break':p3}
+}
+
+function intensityCal(event){// use for continous block of 30s only
+	var intensity = 0;
+	_.each(event.octaveFeat,function(e){
+		_.each(e,function(band){
+			intensity+= band;
+		});
+	});
+	return intensity; 
+
+	
+
+
 }
