@@ -51,7 +51,9 @@ var queryClassify= function (ex,ch){
     	totalDuration+=parseFloat(events[i].maxDur);
 
     };
+	// totalDuration is in seconds
     pauseTime=30000-totalDuration*1000;
+
     //pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
