@@ -145,8 +145,10 @@ var formReq = function(db, user, pwd, col, q){
 		strArr = strArr.concat(filenameDat);
 	}
 	*/
-
-    var postDat = '{"$and":['+strArr.join(',')+']}';
+    if (!q.hasOwnProperty('mask')){
+        q.mask={};
+    }
+    var postDat = '[{"$and":['+strArr.join(',')+']},'+ JSON.stringify(q.mask) + ']';                     //'{"$and":['+strArr.join(',')+']}';
     // Construct the query string
     var qStr = querystring.stringify({'dbname':db, 'colname': col, 'user': user, 'passwd': pwd, 'classname': q.cname});
 	
