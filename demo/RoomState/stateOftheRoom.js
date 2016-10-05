@@ -10,12 +10,13 @@ var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
 var amqp = require('amqplib/callback_api');
-
+var PRESENTING_PHONEID= 'b8a9953125a933af'; ////Long Phone 
+var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc Phone
 
 var q = {};
 //q.t1 = '2016-09-05T22:35:25.443Z';
 //q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
-q.mask ={'_id':false,'androidID':true, 'maxDur':true,'octaveFeat':false};
+q.mask ={'_id':false,'androidID':true, 'maxDur':true};
 var customSort= function(e1,e2){
 	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
 }
@@ -51,12 +52,12 @@ var queryClassify= function (ex,ch){
     var totalDurationForQA =0;
     var totalDurationForPresenting=0;
     for (var i = 0; i < events.length; i++) {
-    	if (events[i].androidID ==='b8a9953125a933af'){ //Long Phone 
+    	if (events[i].androidID ===PRESENTING_PHONEID){ //Long Phone 
     		totalDurationForPresenting+=parseFloat(events[i].maxDur);
     		presentingEvents.push(events[i]);
     	}
 
-    	if (events[i].androidID==='2c3f3c41c3f247c6'){ // Duc Phone
+    	if (events[i].androidID===QA_PHONEID){ // Duc Phone
     		totalDurationForQA+=parseFloat(events[i].maxDur);
     		presentingEvents.push(events[i]);
     	}
