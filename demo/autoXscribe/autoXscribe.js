@@ -26,10 +26,12 @@
 */
 
 var Ill = require('../../nodejs/src/sasclient_node')
-var http = require('http')
+//var http = require('http')
+var request = require('request')
 var async = require('async')
 var fs = require('fs');
 var amqp = require('amqplib/callback_api');
+var exec = require('child_process').exec;
 
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
@@ -37,6 +39,7 @@ var USER = 'nan';
 var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
+var access_token = '';
 
 var q = {};
 // hardcoded query for now that only use time range
@@ -47,10 +50,57 @@ q.t1 = new Date();
 var streamTimerId;
 var isOn = false;
 
+// Authenticate using Google service account and short-lived OAuth tokens. Namely,
+// it is assumed that the user has access to a Google service account key file 
+// (json format), which must be stored safely in the server. 
+// Newly-generated access_token is only temporary.
+//
+// See https://cloud.google.com/speech/docs/common/auth.
+// For an example, see https://cloud.google.com/speech/docs/getting-started.
+exec('gcloud auth print-access-token', function(err,stdout,stderr){
+    if (err){
+        console.log(err);
+        return;
+    }
+    if (stdout){
+        access_token = stdout
+        //console.log('Current access token is '+access_token)
+    }
+});
+
 //Using google service for autoxscribe.
 var xscript = function(data,cb_done,cb_fail){
+    request.post({
+        headers:{"Content-Type": "application/json","Authorization": "Bearer "+access_token},
+        url:'https://speech.googleapis.com/v1beta1/speech:syncrecognize',
+        json: {
+            'config': {
+                'encoding':'LINEAR16',
+                'sampleRate': 16000,
+                'languageCode': 'en-US'
+            },
+            'audio': {
+                'content':data.toString('base64')
+            }
+        }
+    }, function(error, response, body){
+        //console.log(response);
+        if (error){
+            cb_fail(error);
+            return;
+        }
+
+        //console.log(body);
+        if ('results' in body && body.results.length>0){
+            cb_done(body.results[0].alternatives[0].transcript);
+        } else{
+            cb_done('');
+        }
+    });
+
 	//console.log('google ASR');
 	// prepare params for http requests
+    /*
 	var options = {
 		hostname: 'www.google.com',
 		path: '/speech-api/v2/recognize?key=AIzaSyD5NvcrQ54Rbzdxpo3FtJsAyvUjy6O3cn4&output=json&lang=en-us',
@@ -83,20 +133,20 @@ var xscript = function(data,cb_done,cb_fail){
 				} else{
 					cb_done('');
 				}
-				/*
-				var recogWords = [];
-				if (rawRes.result.length>0){
-					for (var l = 0; l < rawRes.result[0].alternative.length; l++){
+				
+				//var recogWords = [];
+				//if (rawRes.result.length>0){
+				//	for (var l = 0; l < rawRes.result[0].alternative.length; l++){
 						// alternative[0] also has confidence level
-						recogWords.push(rawRes.result[0].alternative[l].transcript);
-					}
-					console.log(recogWords);
-					var sentence = recogWords.join(' ');
+				//		recogWords.push(rawRes.result[0].alternative[l].transcript);
+				//	}
+				//	console.log(recogWords);
+				//	var sentence = recogWords.join(' ');
 
-					eventj.tag = 'speech '+sentence;
-					cb_done();
-				}
-				*/
+				//	eventj.tag = 'speech '+sentence;
+				//	cb_done();
+				//}
+				
 			}
 		});
 	});
@@ -107,6 +157,7 @@ var xscript = function(data,cb_done,cb_fail){
 	});
 	req.write(data);
 	req.end();
+    */
 }
 
 // query and transcribe audio
