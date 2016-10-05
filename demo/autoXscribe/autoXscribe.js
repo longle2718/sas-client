@@ -217,7 +217,7 @@ amqp.connect('amqp://localhost',function(err,conn){
 				try{
 					roomStateProb = JSON.parse(roomStateProbStr);
 					probOn =  roomStateProb.p_presenting+roomStateProb.p_QA;
-					console.log("Probability: "+probOn);
+					//console.log("Probability: "+probOn);
 				} catch(exc){
 					console.log(exc);
 					return;
