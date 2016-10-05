@@ -44,20 +44,35 @@ var queryClassify= function (ex,ch){
     	//console.log('pauseTime at'+ind+':'+pauseTime)
     	intensity+=intensityCal(e);
     });*/
-    var pauseTime=0;
-    var totalDuration =0;
+    var presentingEvents = new Array();
+    var qAEvents= new Array(); 
+    var pauseTimeForQAphone=0;
+    var pauseTimeForPresentingphone=0;
+    var totalDurationForQA =0;
+    var totalDurationForPresenting=0;
     for (var i = 0; i < events.length; i++) {
-    	console.log(events[i].maxDur);
-    	totalDuration+=parseFloat(events[i].maxDur);
+    	if (events[i].androidID ==='b8a9953125a933af'){ //Long Phone 
+    		totalDurationForPresenting+=parseFloat(events[i].maxDur);
+    		presentingEvents.push(events[i]);
+    	}
+
+    	if (events[i].androidID==='2c3f3c41c3f247c6'){ // Duc Phone
+    		totalDurationForQA+=parseFloat(events[i].maxDur);
+    		presentingEvents.push(events[i]);
+    	}
+    	//console.log(events[i].androidID);
+    	
 
     };
 	// totalDuration is in seconds
-    pauseTime=30000-totalDuration*1000;
+    pauseTimeForPresentingphone=30000-totalDurationForPresenting*1000;
+    pauseTimeForQAphone = 30000-totalDurationForQA*1000;
 
     //pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
-    console.log('total pauseTime in ms:'+ pauseTime);
+    console.log('total pauseTime for QA phone in ms:'+ pauseTimeForQAphone);
+    console.log('total pauseTime for presentin phone in ms:'+ pauseTimeForPresentingphone)
     console.log('probability Log: \n');
-	msg = JSON.stringify(decision(pauseTime))
+	msg = JSON.stringify(decision(pauseTimeForQAphone));
     console.log(msg);
     //console.log('total intensity:'+intensity+'\n');
     console.log('---------------------------------------------------------------');
@@ -102,11 +117,14 @@ function decision(pauseTime){
 
 function intensityCal(event){// use for continous block of 30s only
 	var intensity = 0;
-	_.each(event.octaveFeat,function(e){
-		_.each(e,function(band){
-			intensity+= band;
-		});
-	});
+	
+	for (var i = 0; i < event.octaveFeat.length; i++) {
+		element =event.octaveFeat[i];
+		for (var j = 0; j < element.length; j++) {
+			intensity +=element[j];
+		};
+	};
+	
 	return intensity; 
 
 	
