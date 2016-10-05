@@ -64,7 +64,7 @@ exec('gcloud auth print-access-token', function(err,stdout,stderr){
     }
     if (stdout){
         access_token = stdout
-        //console.log('Current access token is '+access_token)
+        console.log('Current access token is '+access_token.slice(0,10)+'...')
     }
 });
 
