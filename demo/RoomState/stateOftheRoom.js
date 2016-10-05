@@ -15,7 +15,7 @@ var amqp = require('amqplib/callback_api');
 var q = {};
 //q.t1 = '2016-09-05T22:35:25.443Z';
 //q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
-
+q.mask ={'_id':false,'androidID':true, 'maxDur':true,'octaveFeat':false};
 var customSort= function(e1,e2){
 	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
 }
@@ -31,7 +31,7 @@ var queryClassify= function (ex,ch){
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 	console.log('# of events = '+events.length);
-	//console.log('['+events[0] +','+events[1]+'\n');
+	console.log(events[0]);
 	//events.sort(customSort);
     /*_.each(events,function(e,ind){
     	//console.log('recordTime:'+e.recordDate, 'Duration:'+ e.maxDur+'\n');
