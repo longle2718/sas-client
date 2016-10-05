@@ -47,9 +47,11 @@ var queryClassify= function (ex,ch){
     var pauseTime=0;
     var totalDuration =0;
     for (var i = 0; i < events.length; i++) {
+    	console.log(events[i].maxDur);
     	totalDuration+=parseFloat(events[i].maxDur);
+
     };
-    pauseTime=30000-totalDuration;
+    pauseTime=30000-totalDuration*1000;
     //pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
     console.log('total pauseTime in ms:'+ pauseTime);
     console.log('probability Log: \n');
@@ -72,7 +74,7 @@ var queryClassify= function (ex,ch){
 // Query the Illiad service for audio events that matches the query q
 
 function decision(pauseTime){
-	var  x=pauseTime/1000; //convert to second
+	var  x=pauseTime/1000 -7; //convert to second
 	var z1= Math.exp(-(x-8)*(x-8)/18);
 	var z2= Math.exp(-(x-12)*(x-12)/18);
 	var z3= Math.exp(-(x-29)*(x-29)/18);
@@ -80,6 +82,18 @@ function decision(pauseTime){
 	var p1 =z1/normalizedFactor;
 	var p2 = z2/normalizedFactor;
 	var p3 = z3/normalizedFactor;
+	if (p1>=p2 && p1>=p3){
+		console.log('p_presenting')
+	}
+	else {
+		
+		if (p2>=p1 && p2>=p3){
+			console.log('p_QA');
+		}
+		else{
+			console.log('p_break');
+		}
+	}
 
 	return {'p_presenting':p1,'p_QA':p2,'p_break':p3}
 }
