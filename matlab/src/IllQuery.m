@@ -91,7 +91,7 @@ end
 
 strCellArr = {timeDat,locDat,freqDat,durDat,tagDat,devDat};
 strCellArr(cellfun('isempty',strCellArr)) = [];
-postDat = ['{"$and":[' strjoin(strCellArr,',') ']}'];
+postDat = ['[{"$and":[' strjoin(strCellArr,',') ']},{}]']; % no mask for now
 
 tmp = urlread2(['http://' servAddr '/query?' queryString], 'POST', postDat, [], 'READ_TIMEOUT', 15000);
 file = loadjson(tmp);

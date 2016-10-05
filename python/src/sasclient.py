@@ -80,7 +80,7 @@ def IllQuery(servAddr,db, user, pwd, col, q):
     seq = [x for x in seq if x]
     postDat = ","
     postDat = postDat.join(seq)
-    postDat = '{"$and":[' + postDat + ']}'
+    postDat = '[{"$and":[' + postDat + ']},{}]' # no mask for now
     r = requests.post('http://'+servAddr+'/query',params=payload,data = postDat, timeout=15)
     return r.json()
 
