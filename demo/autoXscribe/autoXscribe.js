@@ -229,12 +229,15 @@ amqp.connect('amqp://localhost',function(err,conn){
 						streamTimerId = setInterval(queryXscribe,10000)
 						isOn = true;
 						console.log('autoXscribe: ON')
+                        // TODO: dummy marker event for start
+
 					}
 				}else{
 					if (isOn){
 						clearInterval(streamTimerId);
 						isOn = false;
 						console.log('autoXscribe: OFF')
+                        // TODO: dummy marker event for stop
 					}
 				}
 				
