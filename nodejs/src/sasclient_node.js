@@ -178,7 +178,7 @@ module.exports = {
 	  			var events = JSON.parse(body);
 				cb_done(events);
 			} else{
-	  			console.log('ajax failed');
+	  			console.log('request failed');
 				cb_fail();
 			}
 		});
@@ -201,7 +201,7 @@ module.exports = {
 		});
 	},
 
-    ColPost: function(servAddr,db,user,pwd,col,aEvent){
+    ColPost: function(servAddr,db,user,pwd,col,aEvent,cb_done,cb_fail){
     	var qStr = querystring.stringify({'dbname':db, 'colname': col, 'user':user, 'passwd':pwd});
 
 		request.post({

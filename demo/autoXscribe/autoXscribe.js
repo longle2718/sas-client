@@ -235,7 +235,7 @@ amqp.connect('amqp://localhost',function(err,conn){
 						isOn = true;
 						console.log('autoXscribe: ON');
 
-                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(){
+                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(resp){
                             console.log('Start marker event sent');
                         },function(){
                             console.log('Start marker event NOT sent');
@@ -248,7 +248,7 @@ amqp.connect('amqp://localhost',function(err,conn){
 						isOn = false;
 						console.log('autoXscribe: OFF');
 
-                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(){
+                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(resp){
                             console.log('End marker event sent');
                         },function(){
                             console.log('End marker event NOT sent');

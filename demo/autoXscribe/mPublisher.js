@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Usage: node mPublisher.js '{"p_presenting":0.1,"p_QA":0.1}'
+// Usage: node mPublisher.js '{"p_presenting":0.8,"p_QA":0.1}'
 
 var amqp = require('amqplib/callback_api');
 
