@@ -1,9 +1,9 @@
 % function resp = IllColPut(servAddr, db, user, pwd, col, filename, op, field)
 % Apply operation 'op' with field 'field' on document 'filename'. 
 %
-% 'field' is json, i.e. has the form {<name>:<value>}.
 % 'op' includes (but not limited to, see the MongoDb field update operators
 % for the complete list): inc, mul, max, min, set, unset.
+% 'field' is json string, i.e. has the form {<name>:<value>}.
 %
 % Long Le
 % University of Illinois

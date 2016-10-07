@@ -199,5 +199,46 @@ module.exports = {
 				cb_fail();
 			}
 		});
-	}
+	},
+
+    ColPost: function(servAddr,db,user,pwd,col,aEvent){
+    	var qStr = querystring.stringify({'dbname':db, 'colname': col, 'user':user, 'passwd':pwd});
+
+		request.post({
+			//headers: {'content-type':'application/json'},
+			url:servAddr+'/col?'+qStr,
+            json: aEvent
+		},function(err,resp,body){
+			if (!err && resp.statusCode == 200){
+				cb_done(body);
+			} else{
+				console.log('request failed');
+				cb_fail();
+			}
+		});
+    },
+
+    /*
+     * 'op' includes (but not limited to, see the MongoDb 
+     * field update operators for the complete list): 
+     * inc, mul, max, min, set, unset.
+     * 'field' is json string, i.e. has the form {<name>:<value>}.
+     */
+    ColPut: function(servAddr,db,user,pwd,col,filename,op,field,cb_done,cb_fail){
+    	var qStr = querystring.stringify({'dbname':db, 'colname': col, 'user':user, 'passwd':pwd});
+
+        var mStr = '{"filename":"'+filename+'"}\n{"$'+op+'":'+field+'}'
+		request.put({
+			//headers: {'content-type':'application/json'},
+			url:servAddr+'/col?'+qStr,
+            body: mStr
+		},function(err,resp,body){
+			if (!err && resp.statusCode == 200){
+				cb_done(body);
+			} else{
+				console.log('request failed');
+				cb_fail();
+			}
+		});
+    }
 };

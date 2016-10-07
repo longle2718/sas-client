@@ -182,6 +182,11 @@ var queryXscribe = function(){
 
                 // xscribe the raw audio data of an event
                 xscript(data,function(str){
+                    Ill.ColPut(servAddr,DB,USER,PWD,EVENT,aEvent.filename,'set','{"tag":"'+str+'"}',function(){
+                        console.log('Db updated with transcribed text');
+                    },function(){
+                        console.log('Unable to update Db with transcribed text');
+                    });
                     console.log(aEvent.filename+' => '+str);
                 },function(){
                     console.log(aEvent.filename+' => unable to transcribe');
@@ -226,18 +231,28 @@ amqp.connect('amqp://localhost',function(err,conn){
 				if (probOn > 0.7){
 					if (!isOn){
 						clearInterval(streamTimerId);
-						streamTimerId = setInterval(queryXscribe,10000)
+						streamTimerId = setInterval(queryXscribe,10000);
 						isOn = true;
-						console.log('autoXscribe: ON')
-                        // TODO: dummy marker event for start
+						console.log('autoXscribe: ON');
+
+                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(){
+                            console.log('Start marker event sent');
+                        },function(){
+                            console.log('Start marker event NOT sent');
+                        });
 
 					}
 				}else{
 					if (isOn){
 						clearInterval(streamTimerId);
 						isOn = false;
-						console.log('autoXscribe: OFF')
-                        // TODO: dummy marker event for stop
+						console.log('autoXscribe: OFF');
+
+                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(){
+                            console.log('End marker event sent');
+                        },function(){
+                            console.log('End marker event NOT sent');
+                        });
 					}
 				}
 				
