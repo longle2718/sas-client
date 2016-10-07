@@ -1,6 +1,6 @@
 # sas-clientLib
 
-This is the source code of the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu))'s client.
+This is the repo of the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu))'s client.
 
 The repo for the servers is at https://bitbucket.org/longle1/sas-servers
 
