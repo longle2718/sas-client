@@ -207,6 +207,49 @@ var queryXscribe = function(){
     })
 }
 
+// control the operation of queryXscribe based on msg
+var controller = function(msg){
+    // handle rabbitmq message here
+    roomStateProbStr = msg.content.toString();
+    //console.log(roomStateProbStr);
+    try{
+        roomStateProb = JSON.parse(roomStateProbStr);
+        probOn =  roomStateProb.p_presenting+roomStateProb.p_QA;
+        //console.log("Probability: "+probOn);
+    } catch(exc){
+        console.log(exc);
+        return;
+    }
+
+    if (probOn > 0.7){
+        if (!isOn){
+            clearInterval(streamTimerId);
+            streamTimerId = setInterval(queryXscribe,10000);
+            isOn = true;
+            console.log('autoXscribe: ON');
+
+            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(resp){
+                console.log('Start marker event sent');
+            },function(){
+                console.log('Start marker event NOT sent');
+            });
+
+        }
+    }else{
+        if (isOn){
+            clearInterval(streamTimerId);
+            isOn = false;
+            console.log('autoXscribe: OFF');
+
+            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(resp){
+                console.log('End marker event sent');
+            },function(){
+                console.log('End marker event NOT sent');
+            });
+        }
+    }
+};
+
 // control logic for turning on/off the transcription based on the message queue
 amqp.connect('amqp://localhost',function(err,conn){
 	conn.createChannel(function(err,ch){
@@ -216,46 +259,7 @@ amqp.connect('amqp://localhost',function(err,conn){
 			//console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
 			ch.bindQueue(q.queue, ex, '');
 			ch.consume(q.queue, function(msg) {
-				// handle rabbitmq message here
-				roomStateProbStr = msg.content.toString();
-				//console.log(roomStateProbStr);
-				try{
-					roomStateProb = JSON.parse(roomStateProbStr);
-					probOn =  roomStateProb.p_presenting+roomStateProb.p_QA;
-					//console.log("Probability: "+probOn);
-				} catch(exc){
-					console.log(exc);
-					return;
-				}
-
-				if (probOn > 0.7){
-					if (!isOn){
-						clearInterval(streamTimerId);
-						streamTimerId = setInterval(queryXscribe,10000);
-						isOn = true;
-						console.log('autoXscribe: ON');
-
-                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(resp){
-                            console.log('Start marker event sent');
-                        },function(){
-                            console.log('Start marker event NOT sent');
-                        });
-
-					}
-				}else{
-					if (isOn){
-						clearInterval(streamTimerId);
-						isOn = false;
-						console.log('autoXscribe: OFF');
-
-                        Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(resp){
-                            console.log('End marker event sent');
-                        },function(){
-                            console.log('End marker event NOT sent');
-                        });
-					}
-				}
-				
+				controller(msg);
 			},{noAck: true});
 		});
 	})
