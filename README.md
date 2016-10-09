@@ -1,6 +1,10 @@
 # sas-clientLib
 
-This is the source code of the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu))'s client.
+This is the repo of the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu))'s client.
+
+The repo for the servers is at https://bitbucket.org/longle1/sas-servers
+
+The repo for the sensor is at https://bitbucket.org/longle1/sas-sensor
 
 ## Overview
 The client component (highlighted in the figure below) in the overall SAS. The client library is useful for developing applications using the SAS.
