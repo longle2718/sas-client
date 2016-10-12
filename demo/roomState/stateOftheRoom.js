@@ -24,7 +24,7 @@ var customSort= function(e1,e2){
 var t=new Date();
 var intensity =0;
 
-var queryClassify= function (ex,ch){
+var queryClassify= function (ch,ex){
     var T = 30;
 
 	t+=1000;
@@ -88,7 +88,6 @@ var queryClassify= function (ex,ch){
 		pauseTime=0 ; // reset paustime after done
 		
 		// Rabbitmq messaging
-		ch.assertExchange(ex, 'direct', {durable: false});
 		ch.publish(ex, 'probVec', new Buffer(msg));
 		console.log("Sent %s", msg);
     }, function(){
@@ -170,8 +169,9 @@ amqp.connect('amqp://localhost', function(err, conn) {
 	// print out all the strings after the command or Hello world if empty
     //var msg = process.argv.slice(2).join(' ') || 'Hello World!';
 	// the first argument must be a no-argument callback function, otherwise exception
+	ch.assertExchange(ex, 'direct', {durable: false});
 	setInterval(function(){
-		queryClassify(ex,ch);
+		queryClassify(ch,ex);
 	},5000)
 
   });

@@ -161,7 +161,7 @@ var xscript = function(data,cb_done,cb_fail){
 }
 
 // query and transcribe audio
-var queryXscribe = function(){
+var queryXscribe = function(ch,ex){
     q.t2.setTime(Date.now())
     q.t1.setTime(q.t2.getTime()-10000)
     console.log('From '+q.t1+' to '+q.t2)
@@ -182,12 +182,16 @@ var queryXscribe = function(){
 
                 // xscribe the raw audio data of an event
                 xscript(data,function(str){
+                    // update Illiad
                     Ill.ColPut(servAddr,DB,USER,PWD,EVENT,aEvent.filename,'set','{"tag":"'+str+'"}',function(){
                         console.log('Db updated with transcribed text');
                     },function(){
                         console.log('Unable to update Db with transcribed text');
                     });
                     console.log(aEvent.filename+' => '+str);
+                    // notify the message queue
+                    ch.publish(ex,'text',new Buffer(str));
+                    console.log('Notified message broker');
                 },function(){
                     console.log(aEvent.filename+' => unable to transcribe');
                 });
@@ -208,7 +212,7 @@ var queryXscribe = function(){
 }
 
 // control the operation of queryXscribe based on msg
-var controller = function(msg){
+var controller = function(msg,ch,ex){
     // handle rabbitmq message here
     roomStateProbStr = msg.content.toString();
     //console.log(roomStateProbStr);
@@ -224,7 +228,9 @@ var controller = function(msg){
     if (probOn > 0.7){
         if (!isOn){
             clearInterval(streamTimerId);
-            streamTimerId = setInterval(queryXscribe,10000);
+            streamTimerId = setInterval(function(){
+                queryXscribe(ch,ex);
+            },10000);
             isOn = true;
             console.log('autoXscribe: ON');
 
@@ -254,12 +260,12 @@ var controller = function(msg){
 amqp.connect('amqp://localhost',function(err,conn){
 	conn.createChannel(function(err,ch){
 		var ex = 'roomStateProb'; // the name of the exchange abstraction from rabbitmq
-		ch.assertExchange(ex, 'fanout', {durable: false});
+		ch.assertExchange(ex, 'direct', {durable: false});
 		ch.assertQueue('',{exclusive: true},function(err,q){
 			//console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
-			ch.bindQueue(q.queue, ex, '');
+			ch.bindQueue(q.queue, ex, 'probVec');
 			ch.consume(q.queue, function(msg) {
-				controller(msg);
+				controller(msg,ch,ex);
 			},{noAck: true});
 		});
 	})
