@@ -10,27 +10,41 @@ import gdp
 gdp.gdp_init()
 # create a GDP_NAME object from a human readable python string
 #gcl_name = gdp.GDP_NAME('edu.illinois.ifp.longle1.log0')
-gcl_name = gdp.GDP_NAME('edu.illinois.ifp.acoustic.log0')
-# assume that this log already exists.
-gcl_handle = gdp.GDP_GCL(gcl_name,gdp.GDP_MODE_RA)
+#gcl_name = gdp.GDP_NAME('edu.illinois.ifp.acoustic.log0')
+logNames = {'probVec':'edu.illinois.ifp.acoustic.probVec',
+            'text':'edu.illinois.ifp.acoustic.text'}
+
+# assume that the log(s) already exists.
+gcl_handles = {}
+for key,gcl_name in logNames.items():
+    print('gcl_name = '+gcl_name)
+    gcl_name = gdp.GDP_NAME(gcl_name)
+    gcl_handles[key] = gdp.GDP_GCL(gcl_name,gdp.GDP_MODE_RA)
 
 def callback(ch,method,properties,body):
-    print(body)
-    gcl_handle.append({'data':body})
-    # verify if write successful
-    datum = gcl_handle.read(-1)
-    print('The most recent record number is '+ str(datum['recno']))
+    print('routing_key = '+method.routing_key+', body = '+body)
+    if method.routing_key in gcl_handles:
+        gcl_handle = gcl_handles[method.routing_key]
+        gcl_handle.append({'data':body})
+
+        # verify if write successful
+        datum = gcl_handle.read(-1)
+        print('The most recent record number is '+ str(datum['recno']))
 
 # === Rabbitmq setup
-# subscribe to roomStateProb ex
+# subscribe to roomStateProb exchange
+# for multiple severity
+ex = 'roomStateProb'
+severities = ['probVec','text']
+
 connection = pika.BlockingConnection(pika.ConnectionParameters(
     host='localhost'))
 channel = connection.channel()
-ex = 'roomStateProb'
-channel.exchange_declare(exchange=ex,type='fanout')
+channel.exchange_declare(exchange=ex,type='direct')
 result = channel.queue_declare(exclusive=True)
 queue_name = result.method.queue
-channel.queue_bind(exchange=ex,queue=queue_name)
+for severity in severities:
+    channel.queue_bind(exchange=ex,queue=queue_name,routing_key=severity)
 channel.basic_consume(callback,queue=queue_name,no_ack=True)
 channel.start_consuming()
 

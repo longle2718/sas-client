@@ -88,8 +88,8 @@ var queryClassify= function (ex,ch){
 		pauseTime=0 ; // reset paustime after done
 		
 		// Rabbitmq messaging
-		ch.assertExchange(ex, 'fanout', {durable: false});
-		ch.publish(ex, '', new Buffer(msg));
+		ch.assertExchange(ex, 'direct', {durable: false});
+		ch.publish(ex, 'probVec', new Buffer(msg));
 		console.log("Sent %s", msg);
     }, function(){
 	console.log("Ill.Query failed");
