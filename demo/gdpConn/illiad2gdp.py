@@ -5,11 +5,11 @@ Long Le <longle1@illinois.edu>
 University of Illinois
 """
 import os
-dir = os.path.dirname(__file__)
+mDir = os.path.dirname(__file__)
 import sys
-sys.path.append(os.path.join(dir, '../../python/src/'))
+sys.path.append(os.path.join(mDir, '../../python/src/'))
 from sasclient import *
-sys.path.append(os.path.join(dir, '../../../gdp/lang/python/'))
+sys.path.append(os.path.join(mDir, '../../../gdp/lang/python/'))
 import gdp
 #sys.path.append(os.path.join(dir, '../../../gdp/lang/python/apps/'))
 #from KVstore import KVstore
