@@ -9,8 +9,8 @@ amqp.connect('amqp://localhost', function(err, conn) {
 	// print out all the strings after the command or Hello world if empty
     var msg = process.argv.slice(2).join(' ') || 'Hello World!';
 
-    ch.assertExchange(ex, 'fanout', {durable: false});
-    ch.publish(ex, '', new Buffer(msg));
+    ch.assertExchange(ex, 'direct', {durable: false});
+    ch.publish(ex, 'probVec', new Buffer(msg));
     console.log(" [x] Sent %s", msg);
   });
 
