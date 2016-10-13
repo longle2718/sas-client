@@ -32,6 +32,7 @@ var async = require('async')
 var fs = require('fs');
 var amqp = require('amqplib/callback_api');
 var exec = require('child_process').exec;
+var uuid = require('node-uuid');
 
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
@@ -39,7 +40,6 @@ var USER = 'nan';
 var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
-var access_token = '';
 
 var q = {};
 // hardcoded query for now that only use time range
@@ -48,11 +48,13 @@ q.t1 = new Date();
 var streamTimerId;
 var isOn = false;
 var curTime = Date.now(); 
+var access_token = '';
+var JWT_access_token = '';
 
 // Authenticate using Google service account and short-lived OAuth tokens. Namely,
 // it is assumed that the user has access to a Google service account key file 
 // (json format), which must be stored safely in the server. 
-// Newly-generated access_token is only temporary.
+// Newly-generated access token is only temporary.
 //
 // See https://cloud.google.com/speech/docs/common/auth.
 // For an example, see https://cloud.google.com/speech/docs/getting-started.
@@ -65,6 +67,27 @@ exec('gcloud auth print-access-token', function(err,stdout,stderr){
         access_token = stdout
         console.log('Current access token is '+access_token.slice(0,10)+'...')
     }
+});
+
+// Assume access to a Microsoft subscription key as a json file
+// See the following links:
+// https://www.microsoft.com/cognitive-services/en-us/subscriptions
+// https://www.microsoft.com/cognitive-services/en-us/Speech-api/documentation/API-Reference-REST/BingVoiceRecognition
+try{
+    var obj = JSON.parse(fs.readFileSync('microsoft_key.json', 'utf8'));
+} catch(exc){
+    console.log(exc);
+}
+request.post({
+    headers: {"Ocp-Apim-Subscription-Key":obj.subscription_key,"Content-type":"application/x-www-form-urlencoded","Content-Length":"0"},
+    url: "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
+}, function(err,resp,body){
+    if (err){
+        console.log(err);
+    }
+
+    JWT_access_token = body;
+    console.log('Current JWT access token is '+JWT_access_token.slice(0,10)+'...')
 });
 
 //Using google service for autoxscribe.
@@ -93,12 +116,38 @@ var xscript = function(data,cb_done,cb_fail){
             return;
         }
 
-        console.log('body = ');
-        console.log(body);
+        //console.log('body = ');
+        //console.log(body);
         if ('results' in body && body.results.length>0){
             cb_done(body.results[0].alternatives[0].transcript);
         } else{
-            cb_done('');
+            // use Microsoft service to try transcribing again
+            // assume access to a Microsoft subscription key as a json file
+            console.log('Try again with Microsoft service');
+            request.post({
+                headers:{"Authorization": "Bearer "+JWT_access_token,"Content-type":"audio/wav;codec='audio/pcm';samplerate=16000;sourcerate=16000;trustsourcerate=true"},
+                url: "https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Ubuntu&version=3.0&format=json&instanceid="+uuid.v4()+"&requestid="+uuid.v4(),
+                body: new Buffer(data)
+            }, function(err,resp,body){
+                if (err){
+                    cb_fail(err);
+                    return;
+                }
+
+                //console.log('body = ');
+                //console.log(body);
+                try{
+                    body = JSON.parse(body);
+                } catch(exc){
+                    cb_fail(exc);
+                    return;
+                }
+                if ('results' in body && body.results.length > 0){
+                    cb_done(body.results[0].lexical);
+                }else{
+                    cb_done('');
+                }
+            });
         }
     });
 
@@ -191,14 +240,14 @@ var queryXscribe = function(ch,ex){
                 xscript(data,function(str){
                     // update Illiad
                     Ill.ColPut(servAddr,DB,USER,PWD,EVENT,aEvent.filename,'set','{"tag":"'+str+'"}',function(){
-                        console.log('Db updated with transcribed text');
+                        //console.log('Db updated with transcribed text');
                     },function(){
                         console.log('Unable to update Db with transcribed text');
                     });
                     console.log(aEvent.filename+' => '+str);
                     // notify the message queue
                     ch.publish(ex,'text',new Buffer(str));
-                    console.log('Notified message broker');
+                    //console.log('Notified message broker');
                 },function(){
                     console.log(aEvent.filename+' => unable to transcribe');
                 });
