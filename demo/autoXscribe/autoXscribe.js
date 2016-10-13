@@ -43,12 +43,11 @@ var access_token = '';
 
 var q = {};
 // hardcoded query for now that only use time range
-//q.t1 = '2016-09-05T22:35:25.443Z';
-//q.t2 = '2016-09-05T22:45:25.443Z';
 q.t2 = new Date();
 q.t1 = new Date();
 var streamTimerId;
 var isOn = false;
+var curTime = Date.now(); 
 
 // Authenticate using Google service account and short-lived OAuth tokens. Namely,
 // it is assumed that the user has access to a Google service account key file 
@@ -70,6 +69,8 @@ exec('gcloud auth print-access-token', function(err,stdout,stderr){
 
 //Using google service for autoxscribe.
 var xscript = function(data,cb_done,cb_fail){
+    //console.log(data.slice(0,4));
+    //console.log(data.length);
     request.post({
         headers:{"Content-Type": "application/json","Authorization": "Bearer "+access_token},
         url:'https://speech.googleapis.com/v1beta1/speech:syncrecognize',
@@ -80,17 +81,20 @@ var xscript = function(data,cb_done,cb_fail){
                 'languageCode': 'en-US'
             },
             'audio': {
-                'content':data.toString('base64')
+                // linear format does not have the header
+                'content':data.slice(44).toString('base64')
             }
         }
     }, function(error, response, body){
+        //console.log('response = ');
         //console.log(response);
         if (error){
             cb_fail(error);
             return;
         }
 
-        //console.log(body);
+        console.log('body = ');
+        console.log(body);
         if ('results' in body && body.results.length>0){
             cb_done(body.results[0].alternatives[0].transcript);
         } else{
@@ -162,8 +166,11 @@ var xscript = function(data,cb_done,cb_fail){
 
 // query and transcribe audio
 var queryXscribe = function(ch,ex){
-    q.t2.setTime(Date.now())
-    q.t1.setTime(q.t2.getTime()-10000)
+    q.t1.setTime(curTime)
+    curTime = Date.now()
+    q.t2.setTime(curTime)
+    //q.t1 = '2016-10-13T04:25:32.927Z';
+    //q.t2 = '2016-10-13T04:29:15.927Z';
     console.log('From '+q.t1+' to '+q.t2)
 
     // Query the Illiad service for audio events that matches the query q
