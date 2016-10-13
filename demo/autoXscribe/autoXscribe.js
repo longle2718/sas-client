@@ -290,7 +290,7 @@ var controller = function(msg,ch,ex){
             isOn = true;
             console.log('autoXscribe: ON');
 
-            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true},function(resp){
+            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":true,"recordDate":new Date().toISOString()},function(resp){
                 console.log('Start marker event sent');
             },function(){
                 console.log('Start marker event NOT sent');
@@ -303,7 +303,7 @@ var controller = function(msg,ch,ex){
             isOn = false;
             console.log('autoXscribe: OFF');
 
-            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false},function(resp){
+            Ill.ColPost(servAddr,DB,USER,PWD,EVENT,{"isStart":false,"recordDate":new Date().toISOString()},function(resp){
                 console.log('End marker event sent');
             },function(){
                 console.log('End marker event NOT sent');
