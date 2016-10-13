@@ -123,7 +123,7 @@ var xscript = function(data,cb_done,cb_fail){
         } else{
             // use Microsoft service to try transcribing again
             // assume access to a Microsoft subscription key as a json file
-            console.log('Try again with Microsoft service');
+            //console.log('Try again with Microsoft service');
             request.post({
                 headers:{"Authorization": "Bearer "+JWT_access_token,"Content-type":"audio/wav;codec='audio/pcm';samplerate=16000;sourcerate=16000;trustsourcerate=true"},
                 url: "https://speech.platform.bing.com/recognize?scenarios=smd&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=Ubuntu&version=3.0&format=json&instanceid="+uuid.v4()+"&requestid="+uuid.v4(),
