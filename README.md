@@ -26,6 +26,8 @@ matlab/ -- MatLab source and test
 
 python/ -- Python source and test
 
+nodejs/ -- Nodejs source and test
+
 ## License
 The MIT License
 
