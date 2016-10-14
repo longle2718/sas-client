@@ -101,6 +101,7 @@ var xscript = function(data,cb_done,cb_fail){
             'config': {
                 'encoding':'LINEAR16',
                 'sampleRate': 16000,
+                'profanityFilter': true,
                 'languageCode': 'en-US'
             },
             'audio': {
