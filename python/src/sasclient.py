@@ -35,29 +35,29 @@ def IllQuery(servAddr,db, user, pwd, col, q):
     # Construct the query data to send
     # ???ymdHMS3???
     if ('t1' in q) and ('t2' in q):
-        timeDat = '{"recordDate":{"$gte":{"$date":"' + q['t1'].isoformat() + 'Z"}, "$lte":{"$date":"' + q['t2'].isoformat() + 'Z"}}}'
+        timeDat = '{"recordDate":{"$gte":{"$date":"' + q['t1'].isoformat() + 'Z"}, "$lt":{"$date":"' + q['t2'].isoformat() + 'Z"}}}'
     elif 't1' in q:
         timeDat = '{"recordDate":{"$gte":{"$date":"' + q['t1'].isoformat() +  'Z"}}}'
     elif 't2' in q:
-        timeDat = '{"recordDate":{"$lte":{"$date":"' + q['t2'].isoformat() +  'Z"}}}'
+        timeDat = '{"recordDate":{"$lt":{"$date":"' + q['t2'].isoformat() +  'Z"}}}'
     else:
         timeDat = ''
     # frequency
     if ('f1' in q) and ('f2' in q):
-        freqDat = '{minFreq:{$gte:' + str(q['f1']) + '}},{maxFreq:{$lte:' + str(q['f2']) + '}}'
+        freqDat = '{minFreq:{$gte:' + str(q['f1']) + '}},{maxFreq:{$lt:' + str(q['f2']) + '}}'
     elif 'f1' in q:
         freqDat = '{minFreq:{$gte:' + str(q['f1']) + '}}'
     elif 'f2' in q:
-        freqDat = '{maxFreq:{$lte:' + str(q['f2']) + '}}'
+        freqDat = '{maxFreq:{$lt:' + str(q['f2']) + '}}'
     else:
         freqDat = ''
     # duration
     if ('dur1' in q) and ('dur2' in q):
-        durDat = '{maxDur:{$gte:' + str(q['dur1']) + ', $lte:' + str(q['dur2']) + '}}'
+        durDat = '{maxDur:{$gte:' + str(q['dur1']) + ', $lt:' + str(q['dur2']) + '}}'
     elif 'dur1' in q:
         durDat = '{maxDur:{$gte:' + str(q['dur1']) + '}}'
     elif 'f2' in q:
-        durDat = '{maxDur:{$lte:' + str(q['dur2']) + '}}'
+        durDat = '{maxDur:{$lt:' + str(q['dur2']) + '}}'
     else:
         durDat = ''
     # Location and Radius

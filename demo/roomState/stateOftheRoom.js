@@ -187,9 +187,8 @@ function intensityCal(event){// use for continous block of 30s only
 	var intensity = 0;
 	
 	for (var i = 0; i < event.octaveFeat.length; i++) {
-		element =event.octaveFeat[i];
-		for (var j = 0; j < element.length; j++) {
-			intensity +=element[j];
+		for (var j = 0; j < event.octaveFeat[i].length; j++) {
+			intensity += event.octaveFeat[i][j];
 		};
 	};
 	

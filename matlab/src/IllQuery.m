@@ -29,43 +29,43 @@ queryString = http_paramsToString(params);
 if isfield(q, 't1') && isfield(q,'t2')
     %q.t1 = q.t1 + tZoneOffset;
     %q.t2 = q.t2 + tZoneOffset;
-    timeDat = ['{"recordDate":{"$gte":{"$date":"' datestr8601(q.t1, '*ymdHMS3') 'Z"}, "$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
+    timeDat = ['{"recordDate":{"$gte":{"$date":"' datestr8601(q.t1, '*ymdHMS3') 'Z"}, "$lt":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 elseif isfield(q, 't1')
     %q.t1 = q.t1 + tZoneOffset;
     timeDat = ['{"recordDate":{"$gte":{"$date":"' datestr8601(q.t1, '*ymdHMS3') 'Z"}}}'];
 elseif isfield(q, 't2')
     %q.t2 = q.t2 + tZoneOffset;
-    timeDat = ['{"recordDate":{"$lte":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
+    timeDat = ['{"recordDate":{"$lt":{"$date":"' datestr8601(q.t2, '*ymdHMS3') 'Z"}}}'];
 else
     timeDat = [];
 end
 if isfield(q, 'f1') && isfield(q, 'f2')
-    freqDat = ['{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lte:' num2str(q.f2) '}}'];
+    freqDat = ['{minFreq:{$gte:' num2str(q.f1) '}},{maxFreq:{$lt:' num2str(q.f2) '}}'];
 elseif isfield(q, 'f1')
     freqDat = ['{minFreq:{$gte:' num2str(q.f1) '}}'];
 elseif isfield(q, 'f2')
-    freqDat = ['{maxFreq:{$lte:' num2str(q.f2) '}}'];
+    freqDat = ['{maxFreq:{$lt:' num2str(q.f2) '}}'];
 else
     freqDat = [];
 end
 
 if isfield(q, 'dur1') && isfield(q, 'dur2')
-    durDat = ['{maxDur:{$gte:' num2str(q.dur1) ', $lte:' num2str(q.dur2) '}}'];
+    durDat = ['{maxDur:{$gte:' num2str(q.dur1) ', $lt:' num2str(q.dur2) '}}'];
 elseif isfield(q, 'dur1')
     durDat = ['{maxDur:{$gte:' num2str(q.dur1) '}}'];
 elseif isfield(q, 'dur2')
-    durDat = ['{maxDur:{$lte:' num2str(q.dur2) '}}'];    
+    durDat = ['{maxDur:{$lt:' num2str(q.dur2) '}}'];    
 else
     durDat = [];
 end
 
 %{
 if isfield(q, 'lp1') && isfield(q, 'lp2')
-    lpDat = ['{logProb:{$gte:' num2str(q.lp1) ', $lte:' num2str(q.lp2) '}}'];
+    lpDat = ['{logProb:{$gte:' num2str(q.lp1) ', $lt:' num2str(q.lp2) '}}'];
 elseif isfield(q, 'lp1')
     lpDat = ['{logProb:{$gte:' num2str(q.lp1) '}}'];
 elseif isfield(q, 'lp2')
-    lpDat = ['{logProb:{$lte:' num2str(q.lp2) '}}'];    
+    lpDat = ['{logProb:{$lt:' num2str(q.lp2) '}}'];    
 else
     lpDat = [];
 end

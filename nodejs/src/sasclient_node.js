@@ -36,13 +36,13 @@ var formReq = function(db, user, pwd, col, q){
     // Construct the query data to send
     var timeDat;
     if (q.hasOwnProperty('t1') && q.hasOwnProperty('t2')){
-        timeDat = '{"recordDate":{"$gte":{"$date":"'+ q.t1+'"}, "$lte":{"$date":"'+q.t2+'"}}}';
+        timeDat = '{"recordDate":{"$gte":{"$date":"'+ q.t1+'"}, "$lt":{"$date":"'+q.t2+'"}}}';
     }
     else if (q.hasOwnProperty('t1')){
         timeDat = '{"recordDate":{"$gte":{"$date":"'+ q.t1+'"}}}';
     }
     else if (q.hasOwnProperty('t2')){
-        timeDat = '{"recordDate":{"$lte":{"$date":"'+ q.t2+'"}}}';
+        timeDat = '{"recordDate":{"$lt":{"$date":"'+ q.t2+'"}}}';
     } else{
 	timeDat = [];
     }
@@ -50,12 +50,12 @@ var formReq = function(db, user, pwd, col, q){
 
 	var freqDat;
     if (q.hasOwnProperty('f1') && q.hasOwnProperty('f2')){
-        freqDat = '{"minFreq":{"$gte":'+q.f1+'}},{"maxFreq":{"$lte":'+q.f2+'}}';
+        freqDat = '{"minFreq":{"$gte":'+q.f1+'}},{"maxFreq":{"$lt":'+q.f2+'}}';
     }
     else if (q.hasOwnProperty('f1')){
         freqDat = '{"minFreq":{"$gte":'+q.f1+'}}';
     }else if (q.hasOwnProperty('f2')){
-        freqDat = '{"maxFreq":{"$lte":'+q.f2+'}}';
+        freqDat = '{"maxFreq":{"$lt":'+q.f2+'}}';
     }else{
         freqDat = [];
     }
@@ -63,13 +63,13 @@ var formReq = function(db, user, pwd, col, q){
     
 	var durDat;
     if (q.hasOwnProperty('dur1') && q.hasOwnProperty('dur2')){
-        durDat = '{"maxDur":{"$gte":'+q.dur1+', "$lte":'+q.dur2+'}}';
+        durDat = '{"maxDur":{"$gte":'+q.dur1+', "$lt":'+q.dur2+'}}';
     }
     else if (q.hasOwnProperty('dur1')){
         durDat = '{"maxDur":{"$gte":'+q.dur1+'}}';
     }
     else if (q.hasOwnProperty('dur2')){
-        durDat = '{"maxDur":{"$lte":'+q.dur2+'}}';
+        durDat = '{"maxDur":{"$lt":'+q.dur2+'}}';
     }
     else{
         durDat = [];
@@ -79,13 +79,13 @@ var formReq = function(db, user, pwd, col, q){
     /*
 	var lpDat;
     if (q.hasOwnProperty('lp1') && q.hasOwnProperty('lp2')){
-        lpDat = '{"logProb":{"$gte":'+q.lp1+', "$lte":'+q.lp2+'}}';
+        lpDat = '{"logProb":{"$gte":'+q.lp1+', "$lt":'+q.lp2+'}}';
     }
     else if (q.hasOwnProperty('lp1')){
         lpDat = '{"logProb":{"$gte":'+q.lp1+'}}';
     }
     else if (q.hasOwnProperty('lp2')){
-        lpDat = '{"logProb":{"$lte":'+q.lp2+'}}';
+        lpDat = '{"logProb":{"$lt":'+q.lp2+'}}';
     }
     else{
         lpDat = '';
