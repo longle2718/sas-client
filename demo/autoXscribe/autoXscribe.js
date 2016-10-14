@@ -246,7 +246,7 @@ var queryXscribe = function(ch,ex){
                     });
                     console.log(aEvent.filename+' => '+str);
                     // notify the message queue
-                    pubDat = '{"text":'+str+',"recordDate":'+aEvent.recordDate+'}'
+                    pubDat = '{"text":"'+str+'","recordDate":"'+aEvent.recordDate+'"}'
                     ch.publish(ex,'text',new Buffer(pubDat));
                     //console.log('Notified message broker');
                 },function(){
