@@ -79,7 +79,10 @@ var queryClassify= function (ch,ex){
 		//console.log('total pauseTime for presentin phone in ms:'+ pauseTimeForPresentingphone)
 		//console.log(totalDurationForPresenting);
 		//console.log(totalDurationForQA);
-		msg = JSON.stringify(decision(totalDurationForPresenting,totalDurationForQA,T));
+		msgObj = decision(totalDurationForPresenting,totalDurationForQA,T));
+        // attach a time stamp
+        msgObj['recordDate'] = q.t2;
+        msg = JSON.stringify(msgObj);
         //console.log('probability Log:');
 		//console.log(msg);
 		//console.log('total intensity:'+intensity+'\n');

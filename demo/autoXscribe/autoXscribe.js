@@ -246,7 +246,8 @@ var queryXscribe = function(ch,ex){
                     });
                     console.log(aEvent.filename+' => '+str);
                     // notify the message queue
-                    ch.publish(ex,'text',new Buffer(str));
+                    pubDat = '{"text":'+str+',"recordDate":'+aEvent.recordDate+'}'
+                    ch.publish(ex,'text',new Buffer(pubDat));
                     //console.log('Notified message broker');
                 },function(){
                     console.log(aEvent.filename+' => unable to transcribe');
