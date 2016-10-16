@@ -3,36 +3,43 @@ var http = require('http');
 var async = require('async');
 var fs = require('fs');
 var _ =require('underscore');
+var amqp = require('amqplib/callback_api');
+
 var servAddr = 'http://acoustic.ifp.illinois.edu:8080';
 var DB = 'publicDb';
 var USER = 'nan';
 var PWD = 'publicPwd';
 var DATA = 'data';
 var EVENT = 'event';
-var amqp = require('amqplib/callback_api');
+
 var PRESENTING_PHONEID= 'b8a9953125a933af'; ////Long Phone 
 var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc Phone
-
-var state = {"p_presenting":0.,"p_QA":0,"p_break":1.};
+var AMB_PHONEID = '2c3f3c41c3f247c7';
+//var state = {"p_presenting":0.,"p_QA":0,"p_break":1.};
 var q = {};
+q.t2 = new Date();
+q.t1 = new Date();
+var curTime = Date.now();
 //q.t1 = '2016-09-05T22:35:25.443Z';
 //q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
 q.mask ={'_id':false,'androidID':true, 'maxDur':true};
-var customSort= function(e1,e2){
-	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
-}
-var t=new Date();
-var intensity =0;
+//var t=new Date();
+//var intensity =0;
+var T = 30; // temporal window in seconds
+var iScale = 0.5;
 
+// Query the Illiad service for audio events that matches the query q
 var queryClassify= function (ch,ex){
-    var T = 30;
-
-	t+=1000;
+	//t+=1000;
 	//console.log('running ...'+ t +'\n');
-	var currentTime= new Date();//new Date();
-	var startTime = currentTime.getTime() - T*1000// in production currentTIme should be used
-	q.t1= new Date(startTime).toISOString();
-	q.t2 = currentTime.toISOString();
+    
+	//var curTime= new Date();//new Date();
+	//var startTime = curTime.getTime() - T*1000// in production currentTIme should be used
+	//q.t1= new Date(startTime).toISOString();
+	//q.t2 = curTime.toISOString();
+    curTime = Date.now()
+    q.t2.setTime(curTime)
+    q.t1.setTime(curTime-T*1000)
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 		console.log('---------------------------------------------------------------');
@@ -50,36 +57,38 @@ var queryClassify= function (ch,ex){
 			//console.log('pauseTime at'+ind+':'+pauseTime)
 			intensity+=intensityCal(e);
 		});*/
-		var presentingEvents = new Array();
-		var qAEvents= new Array(); 
-		var pauseTimeForQAphone=0;
-		var pauseTimeForPresentingphone=0;
+		//var presentingEvents = new Array();
+		//var qAEvents= new Array(); 
+		//var pauseTimeForQAphone=0;
+		//var pauseTimeForPresentingphone=0;
 		var totalDurationForQA =0;
 		var totalDurationForPresenting=0;
+		var totalIntensity=0;
 		for (var i = 0; i < events.length; i++) {
+			//console.log(events[i].androidID);
 			if (events[i].androidID ===PRESENTING_PHONEID){ //Long Phone 
 				totalDurationForPresenting+=parseFloat(events[i].maxDur);
-				presentingEvents.push(events[i]);
+				//presentingEvents.push(events[i]);
 			}
 
 			if (events[i].androidID===QA_PHONEID){ // Duc Phone
 				totalDurationForQA+=parseFloat(events[i].maxDur);
-				presentingEvents.push(events[i]);
+				//presentingEvents.push(events[i]);
 			}
-			//console.log(events[i].androidID);
-			
-
+			if (events[i].androidID===AMB_PHONEID){
+				totalIntensity+=avgIntensity(events[i].octaveFeat);
+			}
 		};
 		// totalDuration is in seconds
 		//pauseTimeForPresentingphone=30000-totalDurationForPresenting*1000;
 		//pauseTimeForQAphone = 30000-totalDurationForQA*1000;
 
-		//pauseTime+=currentTime.getTime()-startTime;  //adding the time at the edge
+		//pauseTime+=curTime.getTime()-startTime;  //adding the time at the edge
 		//console.log('total pauseTime for QA phone in ms:'+ pauseTimeForQAphone);
 		//console.log('total pauseTime for presentin phone in ms:'+ pauseTimeForPresentingphone)
 		//console.log(totalDurationForPresenting);
 		//console.log(totalDurationForQA);
-		msgObj = decision(totalDurationForPresenting,totalDurationForQA,T);
+		msgObj = probMeasure(totalDurationForPresenting,totalDurationForQA,totalIntensity);
         // attach a time stamp
         msgObj['recordDate'] = q.t2;
         msg = JSON.stringify(msgObj);
@@ -87,7 +96,7 @@ var queryClassify= function (ch,ex){
 		//console.log(msg);
 		//console.log('total intensity:'+intensity+'\n');
 
-		intensity=0;
+		//intensity=0;
 		pauseTime=0 ; // reset paustime after done
 		
 		// Rabbitmq messaging
@@ -97,37 +106,8 @@ var queryClassify= function (ch,ex){
 	console.log("Ill.Query failed");
 	})
 }
-// Query the Illiad service for audio events that matches the query q
 
-var softmax = function(x){
-    ex = new Array();
-    sumex = 0;
-    for (var k=0;k<x.length;k++){
-        ex[k] = Math.exp(x[k]);
-        sumex += ex[k];
-    }
-    
-    normex = new Array();
-    for (var k=0;k<x.length;k++){
-        normex[k] = ex[k]/sumex;
-    }
-    return normex;
-};
-
-var probNorm = function(x){
-    sumx = 0;
-    for (var k=0;k<x.length;k++){
-        sumx += x[k];
-    }
-    
-    normx = new Array();
-    for (var k=0;k<x.length;k++){
-        normx[k] = x[k]/sumx;
-    }
-    return normx;
-};
-
-var decision = function(dP,dQA,T){
+var probMeasure = function(dP,dQA,iAmb){
     // manual adjustment based on observations
     T = T-10; 
     dP = Math.min(dP*2,T);
@@ -138,7 +118,9 @@ var decision = function(dP,dQA,T){
     //var p = softmax(x);
     var p = probNorm(x);
     //console.log(p);
-	return {'p_presenting':p[0],'p_QA':p[1],'p_break':p[2]};
+
+    var q = 1-Math.exp(-iAmb/iScale); // prob non empty
+	return {'p_presenting':p[0]*q,'p_QA':p[1]*q,'p_break':p[2]*q,'p_empty':1-q};
 
 	/*
 	var  x=pauseTime/1000 -7; //convert to second
@@ -182,17 +164,48 @@ amqp.connect('amqp://localhost', function(err, conn) {
   //setTimeout(function() { conn.close(); process.exit(0) }, 500);
 });
 
-/*
-function intensityCal(event){// use for continous block of 30s only
-	var intensity = 0;
-	
-	for (var i = 0; i < event.octaveFeat.length; i++) {
-		for (var j = 0; j < event.octaveFeat[i].length; j++) {
-			intensity += event.octaveFeat[i][j];
+var customSort= function(e1,e2){
+	return new Date(e1.recordDate).getTime() - new Date(e2.recordDate).getTime()
+}
+
+var softmax = function(x){
+    ex = new Array();
+    sumex = 0;
+    for (var k=0;k<x.length;k++){
+        ex[k] = Math.exp(x[k]);
+        sumex += ex[k];
+    }
+    
+    normex = new Array();
+    for (var k=0;k<x.length;k++){
+        normex[k] = ex[k]/sumex;
+    }
+    return normex;
+};
+
+var probNorm = function(x){
+    sumx = 0;
+    for (var k=0;k<x.length;k++){
+        sumx += x[k];
+    }
+    
+    normx = new Array();
+    for (var k=0;k<x.length;k++){
+        normx[k] = x[k]/sumx;
+    }
+    return normx;
+};
+
+function avgIntensity(octaveFeat){// use for continous block of 30s only
+	var intensity = 0.;
+	var num = 0;
+	for (var i = 0; i < octaveFeat.length; i++) {
+		for (var j = 0; j < octaveFeat[i].length; j++) {
+			intensity += octaveFeat[i][j];
+            num += 1
 		};
 	};
 	
-	return intensity; 
+	return intensity/num; 
 }
-*/
 

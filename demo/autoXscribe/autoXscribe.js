@@ -44,10 +44,10 @@ var EVENT = 'event';
 var q = {};
 // hardcoded query for now that only use time range
 q.t2 = new Date();
-q.t1 = new Date();
+q.t1 = new Date(); // a Date object
+var curTime = Date.now(); // a number
 var streamTimerId;
 var isOn = false;
-var curTime = Date.now(); 
 var access_token = '';
 var JWT_access_token = '';
 
@@ -216,6 +216,7 @@ var xscript = function(data,cb_done,cb_fail){
 
 // query and transcribe audio
 var queryXscribe = function(ch,ex){
+    // assume the method toISOString() will be called automatically
     q.t1.setTime(curTime)
     curTime = Date.now()
     q.t2.setTime(curTime)
