@@ -51,8 +51,8 @@ var isOn = false;
 var access_token = '';
 var JWT_access_token = '';
 
+var requestKeys = function(){
 // reset key every once in a while
-setInterval(function(){
     // Authenticate using Google service account and short-lived OAuth tokens. Namely,
     // it is assumed that the user has access to a Google service account key file 
     // (json format), which must be stored safely in the server. 
@@ -91,6 +91,11 @@ setInterval(function(){
         JWT_access_token = body;
         console.log('Current JWT access token is '+JWT_access_token.slice(0,10)+'...')
     });
+}
+
+requestKeys();
+setInterval(function(){
+    requestKeys();
 },30*60*1000);
 
 //Using google service for autoxscribe.
