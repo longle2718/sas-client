@@ -51,44 +51,47 @@ var isOn = false;
 var access_token = '';
 var JWT_access_token = '';
 
-// Authenticate using Google service account and short-lived OAuth tokens. Namely,
-// it is assumed that the user has access to a Google service account key file 
-// (json format), which must be stored safely in the server. 
-// Newly-generated access token is only temporary.
-//
-// See https://cloud.google.com/speech/docs/common/auth.
-// For an example, see https://cloud.google.com/speech/docs/getting-started.
-exec('gcloud auth print-access-token', function(err,stdout,stderr){
-    if (err){
-        console.log(err);
-        return;
-    }
-    if (stdout){
-        access_token = stdout
-        console.log('Current access token is '+access_token.slice(0,10)+'...')
-    }
-});
+// reset key every once in a while
+setInterval(function(){
+    // Authenticate using Google service account and short-lived OAuth tokens. Namely,
+    // it is assumed that the user has access to a Google service account key file 
+    // (json format), which must be stored safely in the server. 
+    // Newly-generated access token is only temporary.
+    //
+    // See https://cloud.google.com/speech/docs/common/auth.
+    // For an example, see https://cloud.google.com/speech/docs/getting-started.
+    exec('gcloud auth print-access-token', function(err,stdout,stderr){
+        if (err){
+            console.log(err);
+            return;
+        }
+        if (stdout){
+            access_token = stdout
+            console.log('Current access token is '+access_token.slice(0,10)+'...')
+        }
+    });
 
-// Assume access to a Microsoft subscription key as a json file
-// See the following links:
-// https://www.microsoft.com/cognitive-services/en-us/subscriptions
-// https://www.microsoft.com/cognitive-services/en-us/Speech-api/documentation/API-Reference-REST/BingVoiceRecognition
-try{
-    var obj = JSON.parse(fs.readFileSync('microsoft_key.json', 'utf8'));
-} catch(exc){
-    console.log(exc);
-}
-request.post({
-    headers: {"Ocp-Apim-Subscription-Key":obj.subscription_key,"Content-type":"application/x-www-form-urlencoded","Content-Length":"0"},
-    url: "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
-}, function(err,resp,body){
-    if (err){
-        console.log(err);
+    // Assume access to a Microsoft subscription key as a json file
+    // See the following links:
+    // https://www.microsoft.com/cognitive-services/en-us/subscriptions
+    // https://www.microsoft.com/cognitive-services/en-us/Speech-api/documentation/API-Reference-REST/BingVoiceRecognition
+    try{
+        var obj = JSON.parse(fs.readFileSync('microsoft_key.json', 'utf8'));
+    } catch(exc){
+        console.log(exc);
     }
+    request.post({
+        headers: {"Ocp-Apim-Subscription-Key":obj.subscription_key,"Content-type":"application/x-www-form-urlencoded","Content-Length":"0"},
+        url: "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
+    }, function(err,resp,body){
+        if (err){
+            console.log(err);
+        }
 
-    JWT_access_token = body;
-    console.log('Current JWT access token is '+JWT_access_token.slice(0,10)+'...')
-});
+        JWT_access_token = body;
+        console.log('Current JWT access token is '+JWT_access_token.slice(0,10)+'...')
+    });
+},30*60*1000);
 
 //Using google service for autoxscribe.
 var xscript = function(data,cb_done,cb_fail){
@@ -284,7 +287,7 @@ var controller = function(msg,ch,ex){
         return;
     }
 
-    if (probOn > 0.7){
+    if (probOn > 0.5){
         if (!isOn){
             clearInterval(streamTimerId);
             streamTimerId = setInterval(function(){
