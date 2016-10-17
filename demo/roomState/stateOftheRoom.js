@@ -14,7 +14,7 @@ var EVENT = 'event';
 
 var PRESENTING_PHONEID= 'b8a9953125a933af'; ////Long Phone 
 var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc Phone
-var AMB_PHONEID = '2c3f3c41c3f247c7';
+var AMB_PHONEID = 'b8a9953125a933af';
 //var state = {"p_presenting":0.,"p_QA":0,"p_break":1.};
 var q = {};
 q.t2 = new Date();
@@ -22,11 +22,12 @@ q.t1 = new Date();
 var curTime = Date.now();
 //q.t1 = '2016-09-05T22:35:25.443Z';
 //q.t2 = '2016-09-05T22:45:25.443Z'; // asumme this is current time
-q.mask ={'_id':false,'androidID':true, 'maxDur':true};
+q.mask ={'_id':false,'androidID':true,'maxDur':true,'octaveFeat':true};
 //var t=new Date();
 //var intensity =0;
-var T = 30; // temporal window in seconds
-var iScale = 0.5;
+var tempWin = 60; // temporal window in seconds
+var tempInc = 5; // temporal increment in seconds
+var iScale = 0.02;
 
 // Query the Illiad service for audio events that matches the query q
 var queryClassify= function (ch,ex){
@@ -34,12 +35,12 @@ var queryClassify= function (ch,ex){
 	//console.log('running ...'+ t +'\n');
     
 	//var curTime= new Date();//new Date();
-	//var startTime = curTime.getTime() - T*1000// in production currentTIme should be used
+	//var startTime = curTime.getTime() - tempWin*1000// in production currentTIme should be used
 	//q.t1= new Date(startTime).toISOString();
 	//q.t2 = curTime.toISOString();
     curTime = Date.now()
     q.t2.setTime(curTime)
-    q.t1.setTime(curTime-T*1000)
+    q.t1.setTime(curTime-tempWin*1000)
 
 	Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
 		console.log('---------------------------------------------------------------');
@@ -61,22 +62,28 @@ var queryClassify= function (ch,ex){
 		//var qAEvents= new Array(); 
 		//var pauseTimeForQAphone=0;
 		//var pauseTimeForPresentingphone=0;
-		var totalDurationForQA =0;
+		var totalDurationForQA=0;
 		var totalDurationForPresenting=0;
 		var totalIntensity=0;
 		for (var i = 0; i < events.length; i++) {
 			//console.log(events[i].androidID);
+			//console.log(events[i]);
+			//presentingEvents.push(events[i]);
 			if (events[i].androidID ===PRESENTING_PHONEID){ //Long Phone 
-				totalDurationForPresenting+=parseFloat(events[i].maxDur);
-				//presentingEvents.push(events[i]);
+                if ('maxDur' in events[i]){
+				    totalDurationForPresenting+=parseFloat(events[i].maxDur);
+                }
 			}
 
 			if (events[i].androidID===QA_PHONEID){ // Duc Phone
-				totalDurationForQA+=parseFloat(events[i].maxDur);
-				//presentingEvents.push(events[i]);
+                if ('maxDur' in events[i]){
+				    totalDurationForQA+=parseFloat(events[i].maxDur);
+                }
 			}
 			if (events[i].androidID===AMB_PHONEID){
-				totalIntensity+=avgIntensity(events[i].octaveFeat);
+                if ('octaveFeat' in events[i]){
+				    totalIntensity+=avgIntensity(events[i].octaveFeat);
+                }
 			}
 		};
 		// totalDuration is in seconds
@@ -97,7 +104,7 @@ var queryClassify= function (ch,ex){
 		//console.log('total intensity:'+intensity+'\n');
 
 		//intensity=0;
-		pauseTime=0 ; // reset paustime after done
+		//pauseTime=0 ; // reset paustime after done
 		
 		// Rabbitmq messaging
 		ch.publish(ex, 'probVec', new Buffer(msg));
@@ -109,12 +116,17 @@ var queryClassify= function (ch,ex){
 
 var probMeasure = function(dP,dQA,iAmb){
     // manual adjustment based on observations
-    T = T-10; 
+    var T = tempWin-10; 
     dP = Math.min(dP*2,T);
     dQA = Math.min(dQA*7,T);
-
+    //console.log('dP = '+dP)
+    //console.log('dQA = '+dQA)
+    //console.log('iAmb = '+iAmb)
+    //console.log('T = '+T)
+    
 	var x = [dP/T, dQA/T,(T-Math.max(dP,dQA))/T];
     //console.log(x);
+
     //var p = softmax(x);
     var p = probNorm(x);
     //console.log(p);
@@ -157,7 +169,7 @@ amqp.connect('amqp://localhost', function(err, conn) {
 	ch.assertExchange(ex, 'direct', {durable: false});
 	setInterval(function(){
 		queryClassify(ch,ex);
-	},5000)
+	},tempInc*1000)
 
   });
 
