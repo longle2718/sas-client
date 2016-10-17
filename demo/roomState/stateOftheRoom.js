@@ -14,7 +14,7 @@ var EVENT = 'event';
 
 var PRESENTING_PHONEID= 'b8a9953125a933af'; ////Long Phone 
 var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc Phone
-var AMB_PHONEID = 'b8a9953125a933af';
+var AMB_PHONEID = '543dbfa014eb0798';
 //var state = {"p_presenting":0.,"p_QA":0,"p_break":1.};
 var q = {};
 q.t2 = new Date();
@@ -131,7 +131,7 @@ var probMeasure = function(dP,dQA,iAmb){
     var p = probNorm(x);
     //console.log(p);
 
-    var q = 1-Math.exp(-iAmb/iScale); // prob non empty
+    var q = 1-Math.exp(-Math.max(iAmb/iScale,Math.max(dP,dQA)/T)); // prob non empty
 	return {'p_presenting':p[0]*q,'p_QA':p[1]*q,'p_break':p[2]*q,'p_empty':1-q};
 
 	/*
