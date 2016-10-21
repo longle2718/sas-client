@@ -13,8 +13,9 @@ var DATA = 'data';
 var EVENT = 'event';
 
 var PRESENTING_PHONEID= 'b8a9953125a933af'; ////Long Phone 
-var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc Phone
-var AMB_PHONEID = '543dbfa014eb0798';
+var QA_PHONEID = '2c3f3c41c3f247c6'; // Duc White Phone
+//var AMB_PHONEID = '543dbfa014eb0798'; // Duc Black Phone 
+var AMB_PHONEID = 'beb21323a2242c14'; // Romit phone NS-10
 //var state = {"p_presenting":0.,"p_QA":0,"p_break":1.};
 var q = {};
 q.t2 = new Date();
