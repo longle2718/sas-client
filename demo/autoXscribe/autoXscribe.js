@@ -127,6 +127,7 @@ var xscript = function(data,cb_done,cb_fail){
 
         //console.log('body = ');
         //console.log(body);
+        //if (false){
         if ('results' in body && body.results.length>0){
             console.log('Google => '+body.results[0].alternatives[0].transcript);
             cb_done(body.results[0].alternatives[0].transcript);
