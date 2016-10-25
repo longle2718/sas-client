@@ -118,8 +118,8 @@ var queryClassify= function (ch,ex){
 var probMeasure = function(dP,dQA,iAmb){
     // manual adjustment based on observations
     var T = tempWin-20; 
-    dP = Math.min(dP*4,T);
-    dQA = Math.min(dQA*16,T);
+    dP = Math.min(dP*8,T);
+    dQA = Math.min(dQA*32,T);
     //console.log('dP = '+dP)
     //console.log('dQA = '+dQA)
     console.log('iAmb = '+iAmb)
