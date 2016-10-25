@@ -128,6 +128,7 @@ var xscript = function(data,cb_done,cb_fail){
         //console.log('body = ');
         //console.log(body);
         if ('results' in body && body.results.length>0){
+            console.log('Google => '+body.results[0].alternatives[0].transcript);
             cb_done(body.results[0].alternatives[0].transcript);
         } else{
             // use Microsoft service to try transcribing again
@@ -152,6 +153,7 @@ var xscript = function(data,cb_done,cb_fail){
                     return;
                 }
                 if ('results' in body && body.results.length > 0){
+                    console.log('Microsoft => '+body.results[0].lexical);
                     cb_done(body.results[0].lexical);
                 }else{
                     cb_done('');
