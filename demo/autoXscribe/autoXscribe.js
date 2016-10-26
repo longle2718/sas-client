@@ -228,12 +228,12 @@ var xscript = function(data,cb_done,cb_fail){
 // query and transcribe audio
 var queryXscribe = function(ch,ex){
     // assume the method toISOString() will be called automatically
-    q.t1.setTime(curTime)
-    curTime = Date.now()
-    q.t2.setTime(curTime)
+    q.t1.setTime(curTime);
+    curTime = Date.now()-15000;
+    q.t2.setTime(curTime);
     //q.t1 = '2016-10-13T04:25:32.927Z';
     //q.t2 = '2016-10-13T04:29:15.927Z';
-    console.log('From '+q.t1+' to '+q.t2)
+    console.log('From '+q.t1+' to '+q.t2);
 
     // Query the Illiad service for audio events that matches the query q
     Ill.Query(servAddr,DB,USER,PWD,EVENT,q,function(events){
