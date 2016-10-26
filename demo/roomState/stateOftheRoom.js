@@ -28,7 +28,7 @@ q.mask ={'_id':false,'androidID':true,'maxDur':true,'octaveFeat':true};
 //var intensity =0;
 var tempWin = 60; // temporal window in seconds
 var tempInc = 5; // temporal increment in seconds
-var iScale = 0.02;
+var iScale = 0.1;
 
 // Query the Illiad service for audio events that matches the query q
 var queryClassify= function (ch,ex){
@@ -118,7 +118,7 @@ var queryClassify= function (ch,ex){
 var probMeasure = function(dP,dQA,iAmb){
     // manual adjustment based on observations
     var T = tempWin-20; 
-    dP = Math.min(dP*6,T);
+    dP = Math.min(dP*8,T);
     dQA = Math.min(dQA*24,T);
     //console.log('dP = '+dP)
     //console.log('dQA = '+dQA)

@@ -231,7 +231,7 @@ var xscript = function(data,cb_done,cb_fail){
 var queryXscribe = function(ch,ex){
     // assume the method toISOString() will be called automatically
     q.t1.setTime(curTime);
-    curTime = Date.now()-15000;
+    curTime = Date.now()-20000;
     q.t2.setTime(curTime);
     //q.t1 = '2016-10-13T04:25:32.927Z';
     //q.t2 = '2016-10-13T04:29:15.927Z';
@@ -290,7 +290,7 @@ var controller = function(msg,ch,ex){
     //console.log(roomStateProbStr);
     try{
         roomStateProb = JSON.parse(roomStateProbStr);
-        probOn =  roomStateProb.p_presenting+roomStateProb.p_QA;
+        probOn =  roomStateProb.p_presenting+roomStateProb.p_QA+roomStateProb.p_break;
         //console.log("Probability: "+probOn);
     } catch(exc){
         console.log(exc);
