@@ -154,8 +154,10 @@ var xscript = function(data,cb_done,cb_fail){
                     return;
                 }
                 if ('results' in body && body.results.length > 0){
-                    console.log('Microsoft => '+body.results[0].lexical);
-                    cb_done(body.results[0].lexical);
+                    rv = body.results[0].lexical;
+                    rv = rv.replace(/<profanity>[\w\W]*<\/profanity>/g,'');
+                    console.log('Microsoft => '+rv);
+                    cb_done(rv);
                 }else{
                     cb_done('');
                 }
