@@ -31,6 +31,7 @@ else:
 	print("... FAILED\n")
 
 #==========================
+'''
 numTest += 1
 print('Test '+str(numTest)+': check models',end='')
 
@@ -40,7 +41,7 @@ if type(models) is list:
 	numPass += 1
 else:
 	print("... FAILED\n")
-	
+'''	
 #==========================
 numTest += 1
 print('Test '+str(numTest)+': send event',end='')
