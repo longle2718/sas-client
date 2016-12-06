@@ -28,6 +28,9 @@ python/ -- Python source and test
 
 nodejs/ -- Nodejs source and test
 
+## Acknowledgement
+This work was supported in part by the TerraSwarm Research Center, one of six centers supported by the STARnet phase of the Focus Center Research Program (FCRP) a Semiconductor Research Corporation program sponsored by MARCO and DARPA. 
+
 ## License
 The MIT License
 
