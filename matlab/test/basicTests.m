@@ -8,7 +8,7 @@ clear all; close all
 
 rootDir = 'C:/Users/Long/Projects/';
 
-addpath([rootDir 'sas-clientLib/src/']);
+addpath([rootDir 'sas-client/matlab/src/']);
 addpath([rootDir 'jsonlab']);
 addpath([rootDir 'V1_1_urlread2']);
 % Import cert into Matlab jvm truststore.
@@ -17,7 +17,7 @@ addpath([rootDir 'V1_1_urlread2']);
 % Only need to do this once per Matlab copy.
 %importcert('illiad.crt')
 
-servAddr = 'acoustic.ifp.illinois.edu';
+servAddr = 'acoustic.ifp.illinois.edu:8080';
 DB = 'publicDb';
 USER = 'nan';
 PWD = 'publicPwd';
