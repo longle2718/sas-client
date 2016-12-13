@@ -24,5 +24,5 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-q.t1 = datenum(2016,12,13,22,00,00); q.t2 = datenum(2016,12,16,08,00,00);
+q.t1 = datenum(2016,12,13,23,00,00); q.t2 = datenum(2016,12,16,08,00,00);
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);

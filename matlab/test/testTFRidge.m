@@ -20,9 +20,11 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-%fNameExt = '8ea9fb9e-4a97-4689-a4dd-f5f481618f17.wav';
-%fNameExt = '60568358-b0d0-4b98-a0a5-06b56b977bf8.wav';
-fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
+fNameExt = 'c49cd4db-1c96-433f-b367-8a7fd8616dea.wav';
+%fNameExt = 'fb3d6943-c07c-4857-808b-ab236f5a5138.wav';
+%fNameExt = 'b0d6c83b-3117-473e-b81d-3209ecd17458.wav';
+%fNameExt = '03034b5f-0279-4eea-8f19-de679b97d92c.wav';
+%fNameExt = '644904f9-f1b7-48b1-8fc1-5543b0bff98b.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt); events{1}
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
