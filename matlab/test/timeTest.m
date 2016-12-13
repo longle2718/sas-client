@@ -1,4 +1,4 @@
-% Quick tests of the remote service
+% A time-based test of the remote service
 %
 % Long Le <longle1@illinois.edu>
 % University of Illinois
@@ -6,7 +6,7 @@
 
 clear all; close all
 
-rootDir = 'C:/Users/Long/Projects/';
+rootDir = '/home/blissbox/';
 
 addpath([rootDir 'sas-client/matlab/src/']);
 addpath([rootDir 'jsonlab']);
@@ -24,5 +24,5 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-q.t1 = datenum(2016,12,13,06,30,00); q.t2 = datenum(2016,12,13,08,00,00);
+q.t1 = datenum(2016,12,13,20,50,00); q.t2 = datenum(2016,12,16,08,00,00);
 events = IllQuery(servAddr,DB, USER, PWD, EVENT, q);
