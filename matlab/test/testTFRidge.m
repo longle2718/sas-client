@@ -5,11 +5,12 @@
 %
 
 clear all; close all;
-rootDir = 'C:/cygwin64/home/UyenBui/';
+%rootDir = 'C:/cygwin64/home/UyenBui/';
+rootDir = '/home/blissbox/';
 addpath([rootDir 'voicebox/'])
 addpath([rootDir 'jsonlab/']);
 addpath([rootDir 'V1_1_urlread2/']);
-addpath([rootDir 'sas-clientLib/matlab/src/']);
+addpath([rootDir 'sas-client/matlab/src/']);
 
 %%
 servAddr = 'acoustic.ifp.illinois.edu:8080';
@@ -19,42 +20,23 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-%fNameExt = '20160315211646212.wav';
-%fNameExt = '20160315212644770.wav';
-%fNameExt = '20160315213404470.wav';
-%fNameExt = '20160315213639396.wav';
-%fNameExt = '20160315221001584.wav';
-fNameExt = '20160315221200844.wav';
+%fNameExt = '8ea9fb9e-4a97-4689-a4dd-f5f481618f17.wav';
+%fNameExt = '60568358-b0d0-4b98-a0a5-06b56b977bf8.wav';
+fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
 
-events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
+events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt); events{1}
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
 [y, header] = wavread_char(data);
 fs = double(header.sampleRate);
 sound(y,fs);
-nBlk = events{1}.fftSize;
-nInc = events{1}.fftSize/2;
-[S,tt,ff] = mSpectrogram(y,fs,nBlk,nInc);
+nBlk = events{1}.blkSize;
+nInc = events{1}.incSize;
+[S,ff,tt] = spectrogram(y,hanning(nBlk),nBlk-nInc,nBlk,fs);
+S = abs(S);
 
-tStr = fieldnames(events{1}.TFRidgeFeat);
-tIdx = zeros(1,numel(tStr));
-fIdx = cell(1,numel(tStr));
-for k = 1:numel(tStr)
-    tIdx(k) = sscanf(tStr{k},'t%d');
-    fIdx{k} = events{1}.TFRidgeFeat.(tStr{k});
-end
-
-% size = 1st full block + incremental blocks
-obs = cell(1,fix((0.8+events{1}.maxDur)*fs/nInc)-1); % assume lag of sensor is 2 x 0.4 s
-tBaseIdx = fix(0.4*fs/nInc);
-btLenIdx = fix(0.064*fs/nInc); % assume btLen of sensor is 0.064 s
-for k = 1:numel(tIdx)
-    obs{tBaseIdx+tIdx(k)-btLenIdx} = fIdx{k};
-end
+fIdx = events{1}.TFRidgeFeat.FI/nBlk*fs;
+tIdx = events{1}.TFRidgeFeat.TI*nInc/fs;
 
 figure; hold on;
-imagesc(S); axis tight; axis xy
-for k = 1:numel(obs)
-    if numel(obs{k}) ~= 0
-        plot(k,obs{k},'*r')
-    end
-end
+imagesc(tt,ff,S); axis tight; axis xy
+plot(tIdx,fIdx,'*r')

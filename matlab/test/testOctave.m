@@ -5,28 +5,23 @@
 %
 
 clear all; close all;
-addpath(genpath('../../../../../voicebox/'))
-addpath(genpath('../../../../../jsonlab'));
-addpath(genpath('../../../../../V1_1_urlread2'));
-addpath(genpath('../../../../../sas-clientLib/src'));
+%rootDir = 'C:/cygwin64/home/UyenBui/';
+rootDir = '/home/blissbox/';
+addpath([rootDir 'voicebox/'])
+addpath([rootDir 'jsonlab/']);
+addpath([rootDir 'V1_1_urlread2/']);
+addpath([rootDir 'sas-client/matlab/src/']);
 
 %% get service data
-servAddr = 'acoustic.ifp.illinois.edu';
+servAddr = 'acoustic.ifp.illinois.edu:8080';
 DB = 'publicDb';
 USER = 'nan';
 PWD = 'publicPwd';
-%DATA = 'data';
-%EVENT = 'event';
-DATA = 'data2';
-EVENT = 'event2';
+DATA = 'data';
+EVENT = 'event';
 
 frameSize = 512;
-
-% event
-%fNameExt = '20160304231653243.wav';
-
-% periodic
-fNameExt = '20160305062739020.wav';
+fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);

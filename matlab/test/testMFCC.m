@@ -5,10 +5,12 @@
 %
 
 clear all; close all;
+%rootDir = 'C:/cygwin64/home/UyenBui/';
+rootDir = '/home/blissbox/';
 addpath(genpath('../../../../../voicebox/'))
 addpath(genpath('../../../../../jsonlab'));
 addpath(genpath('../../../../../V1_1_urlread2'));
-addpath(genpath('../../../../../sas-clientLib/src'));
+addpath(genpath('../../../../../sas-client/src'));
 
 %% Test the mfcc algorithm
 [y,fs] = audioread('../../../../../cohmm/data/GCWA/20160117213557235.wav');
@@ -85,14 +87,14 @@ N = numel(cTmp);
 c = cTmp(2:d+1);
 
 %% test results from remote data
-servAddr = 'acoustic.ifp.illinois.edu';
+servAddr = 'acoustic.ifp.illinois.edu:8080';
 DB = 'publicDb';
 USER = 'nan';
 PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-fNameExt = '20160305062630305.wav';
+fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
