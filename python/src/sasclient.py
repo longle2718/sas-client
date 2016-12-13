@@ -11,9 +11,11 @@ def IllStatusGet(servAddr):
     r = requests.get('http://'+servAddr+'/',timeout=10)
     return r.text
 
+'''
 def IllModelGet(servAddr):
     r = requests.get('http://'+servAddr+'/model',timeout=10)
     return r.json()
+'''
     
 def IllColPost(servAddr, db, user, pwd, col, aEvent):
     payload = {'dbname': db, 'colname': col, 'user': user, 'passwd': pwd}

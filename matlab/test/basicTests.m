@@ -41,6 +41,7 @@ else
     fprintf(1, '... FAILED\n');
 end
 %====================================================
+%{
 numTest = numTest + 1;
 fprintf(1, 'Test %d: check models', numTest);
 
@@ -52,6 +53,7 @@ if iscell(models)
 else
     fprintf(1, '... FAILED\n');
 end
+%}
 %====================================================
 numTest = numTest + 1;
 fprintf(1, 'Test %d: send event', numTest);

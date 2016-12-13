@@ -1,4 +1,4 @@
-# sas-clientLib
+# sas-client
 
 This is the repo of the swarm acoustic service ([SAS](http://acoustic.ifp.illinois.edu))'s client.
 
@@ -8,7 +8,7 @@ The repo for the sensor is at https://bitbucket.org/longle1/sas-sensor
 
 ## Overview
 The client component (highlighted in the figure below) in the overall SAS. The client library is useful for developing applications using the SAS.
-![alt tag](https://github.com/long0612/sas-clientLib/blob/master/fig3.png)
+![alt tag](https://github.com/long0612/sas-client/blob/master/fig3.png)
 
 ## Dependencies
 
@@ -27,6 +27,9 @@ matlab/ -- MatLab source and test
 python/ -- Python source and test
 
 nodejs/ -- Nodejs source and test
+
+## Acknowledgement
+This work was supported in part by the TerraSwarm Research Center, one of six centers supported by the STARnet phase of the Focus Center Research Program (FCRP) a Semiconductor Research Corporation program sponsored by MARCO and DARPA. 
 
 ## License
 The MIT License
