@@ -20,7 +20,7 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-fNameExt = 'c49cd4db-1c96-433f-b367-8a7fd8616dea.wav';
+fNameExt = 'fe944b00-ad85-499c-833b-93c308770e34.wav';
 %fNameExt = 'fb3d6943-c07c-4857-808b-ab236f5a5138.wav';
 %fNameExt = 'b0d6c83b-3117-473e-b81d-3209ecd17458.wav';
 %fNameExt = '03034b5f-0279-4eea-8f19-de679b97d92c.wav';
@@ -37,7 +37,7 @@ nInc = events{1}.incSize;
 S = abs(S);
 
 fIdx = events{1}.TFRidgeFeat.FI/nBlk*fs;
-tIdx = events{1}.TFRidgeFeat.TI*nInc/fs;
+tIdx = (events{1}.TFRidgeFeat.TI+1)*nInc/fs;
 
 figure; hold on;
 imagesc(tt,ff,S); axis tight; axis xy
