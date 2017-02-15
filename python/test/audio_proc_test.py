@@ -29,10 +29,10 @@ print("Number of events found is "+str(len(events)))
 # bytes
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, events[0]['filename'])
 if 'RIFF' == data[0:4].decode('utf-8'):
-	with open('audio.wav', 'wb') as f:
-		f.write(data)
+    with open('audio.wav', 'wb') as f:
+	f.write(data)
 else:
-	sys.exit('Corrupted audio file!')
+    sys.exit('Corrupted audio file!')
 
 fs,data = wavfile.read('audio.wav')
 T = np.arange(len(data))/fs
