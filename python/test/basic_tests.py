@@ -8,6 +8,7 @@ University of Illinois
 import sys
 sys.path.insert(0,sys.path[0]+'../src/')
 from sasclient import *
+from datetime import datetime
 
 servAddr = 'acoustic.ifp.illinois.edu:8080'
 DB = 'publicDb'
