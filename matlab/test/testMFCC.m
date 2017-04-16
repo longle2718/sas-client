@@ -7,13 +7,14 @@
 clear all; close all;
 %rootDir = 'C:/cygwin64/home/UyenBui/';
 rootDir = '/home/blissbox/';
-addpath(genpath('../../../../../voicebox/'))
-addpath(genpath('../../../../../jsonlab'));
-addpath(genpath('../../../../../V1_1_urlread2'));
-addpath(genpath('../../../../../sas-client/src'));
+addpath([rootDir 'voicebox/'])
+addpath([rootDir 'jsonlab/']);
+addpath([rootDir 'V1_1_urlread2/']);
+addpath([rootDir 'sas-client/matlab/src/']);
 
 %% Test the mfcc algorithm
-[y,fs] = audioread('../../../../../cohmm/data/GCWA/20160117213557235.wav');
+load handel.mat;
+fs = Fs;
 %frameSize = 2^floor(log2(0.03*fs));
 frameSize = 512;
 
@@ -94,7 +95,7 @@ PWD = 'publicPwd';
 DATA = 'data';
 EVENT = 'event';
 
-fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
+fNameExt = '69b5ae35-a744-4282-9dae-75e4b0b2fd2f.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
@@ -107,4 +108,4 @@ cepstCoef = melcepst([zeros(1,frameSize/2) y],fs,'Mtaz',d,nBank,frameSize);
 figure;
 subplot(211); imagesc(events{1}.MFCCFeat');
 subplot(212); imagesc(cepstCoef')
-suptitle(sprintf('frame size is %.3f s, norm diff is %.3f',frameSize/fs,norm( events{1}.MFCCFeat-cepstCoef )));
+suptitle(sprintf('frame size is %.3f s, norm diff is %.3f',frameSize/fs,norm( events{1}.MFCCFeat-cepstCoef(1:size(events{1}.MFCCFeat,1),:) )));

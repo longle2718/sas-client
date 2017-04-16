@@ -21,7 +21,7 @@ DATA = 'data';
 EVENT = 'event';
 
 frameSize = 512;
-fNameExt = 'aa77e55e-103a-4c31-a58b-83012ab49185.wav';
+fNameExt = '69b5ae35-a744-4282-9dae-75e4b0b2fd2f.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
@@ -31,13 +31,13 @@ fs = double(header.sampleRate);
 %% compare with ground truth octave band
 
 androidResult = events{1}.octaveFeat';
-[L K] =size(androidResult);
+[L, K] =size(androidResult);
 N= frameSize;
 windows = hann(N);
 noverlap =N/2;
 nfft =N;
-nAverageFrame =62;
-n=log2(N)-1; % 
+nAverageFrame = 1; % 62;
+n=log2(N)-1;
 
 % set up octave 
 octave_group=zeros(n,N/2+1);
@@ -52,8 +52,8 @@ end
 S =spectrogram([zeros(1,frameSize/2) y],windows,noverlap,nfft); % must zero pad
 power=abs(S).^2;
 temp = octave_group*power;
-expectOctaveFeat = zeros(L,K);
-for i=1:K
+expectOctaveFeat = zeros(L,size(S,2));
+for i=1:size(S,2)
   expectOctaveFeat(:,i) =sum(temp(:,1+(i-1)*nAverageFrame:i*nAverageFrame),2)/nAverageFrame;
 end
 
@@ -61,4 +61,4 @@ end
 figure;
 subplot(211); imagesc(androidResult);
 subplot(212); imagesc(expectOctaveFeat);
-suptitle(sprintf(' norm diff is %.3f',norm( expectOctaveFeat-androidResult )));
+suptitle(sprintf(' norm diff is %.3f',norm( expectOctaveFeat(:,1:K)-androidResult )));
