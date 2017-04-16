@@ -21,7 +21,7 @@ DATA = 'data';
 EVENT = 'event';
 
 frameSize = 512;
-fNameExt = '69b5ae35-a744-4282-9dae-75e4b0b2fd2f.wav';
+fNameExt = 'c702e60a-351d-4742-a76b-18b2aafbbe70.wav';
 
 events = IllColGet(servAddr,DB, USER, PWD, EVENT, fNameExt);
 data = IllGridGet(servAddr, DB, USER, PWD, DATA, fNameExt);
@@ -36,7 +36,7 @@ N= frameSize;
 windows = hann(N);
 noverlap =N/2;
 nfft =N;
-nAverageFrame = 1; % 62;
+nAverageFrame = 31; % 62;
 n=log2(N)-1;
 
 % set up octave 
@@ -52,8 +52,8 @@ end
 S =spectrogram([zeros(1,frameSize/2) y],windows,noverlap,nfft); % must zero pad
 power=abs(S).^2;
 temp = octave_group*power;
-expectOctaveFeat = zeros(L,size(S,2));
-for i=1:size(S,2)
+expectOctaveFeat = zeros(L,floor(size(S,2)/nAverageFrame));
+for i=1:floor(size(S,2)/nAverageFrame)
   expectOctaveFeat(:,i) =sum(temp(:,1+(i-1)*nAverageFrame:i*nAverageFrame),2)/nAverageFrame;
 end
 
