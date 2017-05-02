@@ -20,7 +20,7 @@ The client component (highlighted in the figure below) in the overall SAS. The c
 
 demo/ -- some demos
 
-bash/ -- Bash source and test
+bash/ -- Bash source (limited)
 
 matlab/ -- MatLab source and test
 
